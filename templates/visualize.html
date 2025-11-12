@@ -151,17 +151,17 @@
         <div class="viz-grid">
             <!-- Visualization 1 -->
             <div class="viz-item">
-                <h2>1. Hubungan IPK dengan Gaji</h2>
-                <img src="data:image/png;base64,{{ plot1 }}" alt="GPA vs Salary">
+                <h2>1. Hubungan Pengalaman Kerja dengan Gaji</h2>
+                <img src="data:image/png;base64,{{ plot1 }}" alt="Experience vs Salary">
                 <div class="viz-description">
                     <h3>📊 Penjelasan</h3>
-                    <p>Scatter plot ini menunjukkan hubungan antara Nilai Rata-Rata (IPK) dengan Gaji bulanan. Setiap titik mewakili satu responden, dengan warna menunjukkan kesesuaian perusahaan.</p>
+                    <p>Scatter plot ini menunjukkan hubungan antara Lama Bekerja (dalam tahun) dengan Gaji bulanan. Setiap titik mewakili satu alumni SMK, dengan warna menunjukkan kesesuaian perusahaan.</p>
                     <div class="insight-box">
                         <strong>💡 Key Insights:</strong>
                         <ul>
-                            <li>IPK lebih tinggi cenderung berkorelasi dengan gaji yang lebih besar</li>
-                            <li>Responden dengan perusahaan "Tepat" (hijau) lebih banyak di range IPK 3.5-4.0</li>
-                            <li>Variasi gaji sangat besar bahkan dengan IPK yang sama</li>
+                            <li>Pengalaman kerja lebih lama cenderung berkorelasi dengan gaji yang lebih tinggi</li>
+                            <li>Alumni di perusahaan "Tepat" (hijau) umumnya mendapat gaji lebih baik untuk pengalaman yang sama</li>
+                            <li>Variasi gaji menunjukkan faktor lain seperti jenis perusahaan juga berpengaruh</li>
                         </ul>
                     </div>
                 </div>
@@ -187,17 +187,17 @@
             
             <!-- Visualization 3 -->
             <div class="viz-item">
-                <h2>3. Distribusi IPK Berdasarkan Kesesuaian Perusahaan</h2>
-                <img src="data:image/png;base64,{{ plot3 }}" alt="GPA Distribution">
+                <h2>3. Kepuasan Kerja per Jenis Perusahaan</h2>
+                <img src="data:image/png;base64,{{ plot3 }}" alt="Satisfaction by Company Type">
                 <div class="viz-description">
                     <h3>📊 Penjelasan</h3>
-                    <p>Histogram yang membandingkan distribusi IPK antara responden yang bekerja di perusahaan yang tepat vs tidak tepat.</p>
+                    <p>Bar chart yang menampilkan tingkat kepuasan kerja alumni SMK berdasarkan jenis perusahaan tempat mereka bekerja (BUMN, PNS, Swasta, Wirausaha).</p>
                     <div class="insight-box">
                         <strong>💡 Key Insights:</strong>
                         <ul>
-                            <li>Mayoritas responden di perusahaan tepat memiliki IPK 3.0-3.8</li>
-                            <li>Responden di perusahaan tidak tepat cenderung memiliki IPK lebih rendah (2.8-3.2)</li>
-                            <li>Distribusi menunjukkan pentingnya prestasi akademik dalam penempatan kerja</li>
+                            <li>Alumni di BUMN dan PNS cenderung memiliki kepuasan lebih tinggi</li>
+                            <li>Perusahaan Swasta memiliki variasi kepuasan paling beragam</li>
+                            <li>Wirausaha menunjukkan tingkat kepuasan yang relatif stabil</li>
                         </ul>
                     </div>
                 </div>
@@ -227,13 +227,13 @@
                 <img src="data:image/png;base64,{{ plot5 }}" alt="Correlation Heatmap">
                 <div class="viz-description">
                     <h3>📊 Penjelasan</h3>
-                    <p>Heatmap yang menunjukkan korelasi antar fitur numerik: IPK, Waktu Kerja Pertama, Lama Kerja Saat Ini, Total Pengalaman, dan Gaji.</p>
+                    <p>Heatmap yang menunjukkan korelasi antar fitur numerik: Gaji, Lama Kerja Saat Ini, Total Pengalaman Kerja, dan Waktu Tunggu Kerja Pertama.</p>
                     <div class="insight-box">
                         <strong>💡 Key Insights:</strong>
                         <ul>
                             <li>Korelasi positif kuat antara "Total Pengalaman" dan "Gaji" (0.5+)</li>
-                            <li>IPK memiliki korelasi positif lemah dengan gaji (0.2-0.3)</li>
-                            <li>Waktu kerja pertama berkorelasi negatif dengan kepuasan (semakin lama mencari kerja, semakin kurang puas)</li>
+                            <li>Lama kerja memiliki korelasi positif dengan gaji dan kepuasan</li>
+                            <li>Waktu tunggu kerja pertama berkorelasi negatif dengan kepuasan (semakin lama mencari kerja, semakin kurang puas)</li>
                         </ul>
                     </div>
                 </div>

@@ -1,0 +1,164 @@
+tolong bantu saya untuk menyempurnakan form dan yang lainnya.
+
+PEMANFAATAN ALGORITMA K-NEAREST NEIGHBORS DALAM MEMPERTEMUKAN LULUSAN DENGAN PERUSAHAAN YANG TEPAT
+(Studi Kasus SMK Makarya 1 Jakarta)
+
+════════════════════════════════════════════════════════════
+SECTION 1 – INFORMASI DASAR
+════════════════════════════════════════════════════════════
+
+Email
+[Short Answer]
+
+Nama Lengkap
+[Short Answer]
+
+Tempat Tinggal
+[Single Choice]
+
+Jakarta
+Depok
+Tangerang Selatan
+Tangerang
+Bekasi
+Jurusan saat SMK
+[Single Choice]
+
+Akuntansi
+Perkantoran
+Pemasaran
+Apakah Anda saat ini sudah bekerja?
+[Single Choice]
+
+Ya
+Tidak
+(Jika Ya → Section 2 | Jika Tidak → Section 3)
+════════════════════════════════════════════════════════════
+SECTION 2 – UNTUK YANG SUDAH BEKERJA
+════════════════════════════════════════════════════════════
+
+Apa profesi Anda saat ini?
+[Single Choice]
+
+Tempat pekerjaan saat ini
+[Single Choice]
+
+Jakarta
+Depok
+Tangerang Selatan
+Tangerang
+Bekasi
+Bagaimana Anda mendapatkan pekerjaan Anda saat ini?
+[Multiple Choice]
+
+Melalui keluarga/teman
+Melalui job fair
+Mencari sendiri
+Seberapa mudah atau sulit menurut Anda dalam mendapatkan pekerjaan pertama?
+[Single Choice]
+
+Mudah
+Sulit
+Apakah pihak sekolah membantu Anda dalam proses mendapatkan pekerjaan?
+[Single Choice]
+
+Ya
+Tidak
+Apakah pekerjaan pertama Anda sesuai dengan minat dan keterampilan yang Anda pelajari di SMK?
+[Single Choice]
+
+Sesuai
+Tidak sesuai
+Berapa lama waktu yang Anda butuhkan untuk mendapatkan pekerjaan pertama setelah lulus?
+[Single Choice]
+
+< 3 bulan
+3–6 bulan
+6–12 bulan
+1 tahun
+Jenis perusahaan tempat Anda bekerja sekarang?
+[Single Choice]
+
+BUMN
+PNS
+Perusahaan Swasta
+Wirausaha
+Apakah pekerjaan Anda sekarang sesuai dengan jurusan SMK?
+[Single Choice]
+
+Ya
+Tidak
+Seberapa puas Anda dengan pekerjaan saat ini?
+[Single Choice]
+
+Tidak puas
+Puas
+Apakah Anda berencana untuk pindah kerja ke bidang yang lebih sesuai dengan jurusan Anda?
+[Single Choice]
+
+Ya
+Tidak
+Sudah berapa lama Anda menjalani pekerjaan ini?
+[Short Answer]
+
+Nyaman atau tidak?
+[Single Choice]
+
+Iya
+Tidak
+Berapa gaji Anda saat ini?
+[Single Choice]
+
+Di bawah UMK/UMR
+UMR
+Di atas UMR
+════════════════════════════════════════════════════════════
+SECTION 3 – UNTUK YANG BELUM BEKERJA
+════════════════════════════════════════════════════════════
+
+Apa alasan utama Anda belum bekerja?
+[Single Choice]
+
+Sedang mencari pekerjaan
+Kuliah
+Seberapa mudah atau sulit menurut Anda dalam mendapatkan pekerjaan pertama?
+[Single Choice]
+
+Mudah
+Sulit
+Apakah pihak sekolah membantu Anda dalam proses mendapatkan pekerjaan?
+[Single Choice]
+
+Ya
+Tidak
+Apakah Anda berencana untuk bekerja di bidang sesuai jurusan SMK?
+[Single Choice]
+
+Ya
+Tidak
+Apa kendala utama Anda dalam mencari pekerjaan?
+[Single Choice]
+
+Kurangnya lowongan yang sesuai
+Kurangnya pengalaman kerja
+Kurangnya keterampilan yang dibutuhkan
+Apakah Anda sudah pernah mengikuti pelatihan atau kursus tambahan setelah lulus?
+[Single Choice]
+
+Ya
+Tidak
+Apakah Anda menggunakan platform online (LinkedIn, Jobstreet, dll.) untuk mencari pekerjaan?
+[Single Choice]
+
+Ya
+Tidak
+Seberapa yakin Anda dengan keterampilan yang dimiliki untuk bersaing di dunia kerja?
+[Single Choice]
+
+Tidak yakin
+Yakin
+Apakah Anda bersedia jika sekolah membantu memberikan rekomendasi pekerjaan sesuai minat dan keterampilan Anda?
+[Single Choice]
+
+Ya
+Tidak

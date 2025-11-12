@@ -34,8 +34,8 @@ print(f"\nDataset Info:")
 print(f"  Columns: {len(df.columns)}")
 print(f"  Features available: {list(df.columns)[:15]}...")
 
-# Check for required columns
-required_cols = ['tempat_tinggal', 'jurusan', 'nilai_rata', 'jurusan_cocok', 'perusahaan_tepat']
+# Check for required columns (UPDATED: removed nilai_rata - SMK doesn't use GPA)
+required_cols = ['tempat_tinggal', 'jurusan', 'jurusan_cocok', 'perusahaan_tepat']
 missing_cols = [col for col in required_cols if col not in df.columns]
 if missing_cols:
     print(f"❌ Error: Missing required columns: {missing_cols}")
@@ -118,10 +118,10 @@ label_encoders['perusahaan_tepat'] = le_perusahaan
 print(f"  ✓ 'perusahaan_tepat': {len(le_perusahaan.classes_)} categories")
 print(f"    Categories: {list(le_perusahaan.classes_)}")
 
-# Prepare feature matrix (11 features)
+# Prepare feature matrix (10 features - WITHOUT nilai_rata for SMK)
 print("\n6. Building feature matrix...")
 feature_columns = [
-    'tempat_tinggal_encoded', 'jurusan_encoded', 'nilai_rata',
+    'tempat_tinggal_encoded', 'jurusan_encoded',
     'waktu_kerja_pertama', 'profesi_sekarang_encoded', 
     'tempat_kerja_encoded', 'kepuasan_encoded',
     'lama_kerja_1', 'lama_kerja_2', 'nyaman_encoded', 'gaji'
@@ -238,14 +238,14 @@ print(f"    ✓ visualization_data.pkl saved ({sample_size} samples)")
 
 # UNSUPERVISED LEARNING - K-MEANS CLUSTERING
 print("\n14. UNSUPERVISED LEARNING: K-Means Clustering...")
-print("    Selecting features for clustering (nilai_rata, gaji, lama_kerja_2)...")
+print("    Selecting features for clustering (gaji, lama_kerja_2, waktu_kerja_pertama)...")
 
-# Ensure numeric values
-df_work['nilai_rata'] = pd.to_numeric(df_work['nilai_rata'], errors='coerce').fillna(75)
+# Ensure numeric values (UPDATED: removed nilai_rata for SMK)
 df_work['gaji'] = pd.to_numeric(df_work['gaji'], errors='coerce').fillna(5000000)
 df_work['lama_kerja_2'] = pd.to_numeric(df_work['lama_kerja_2'], errors='coerce').fillna(2)
+df_work['waktu_kerja_pertama'] = pd.to_numeric(df_work['waktu_kerja_pertama'], errors='coerce').fillna(3)
 
-clustering_features = ['nilai_rata', 'gaji', 'lama_kerja_2']
+clustering_features = ['gaji', 'lama_kerja_2', 'waktu_kerja_pertama']
 X_clustering = df_work[clustering_features].values
 
 # Scale for clustering
@@ -292,7 +292,7 @@ for i in range(optimal_k):
 cluster_centers_original = scaler_clustering.inverse_transform(kmeans.cluster_centers_)
 print(f"\n    Cluster Centers (Original Scale):")
 for i, center in enumerate(cluster_centers_original):
-    print(f"      Cluster {i}: nilai_rata={center[0]:.2f}, gaji={center[1]:,.0f}, lama_kerja_2={center[2]:.2f}")
+    print(f"      Cluster {i}: gaji={center[0]:,.0f}, lama_kerja_2={center[1]:.2f}, waktu_kerja_pertama={center[2]:.2f}")
 
 # Save clustering data
 clustering_data = {

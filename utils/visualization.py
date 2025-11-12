@@ -31,10 +31,10 @@ def plot_to_base64(fig):
 
 def generate_gpa_vs_salary_scatter(df):
     """
-    Generate scatter plot: GPA vs Salary
+    Generate scatter plot: Experience vs Salary (replaces GPA plot for SMK)
     
     Args:
-        df: DataFrame with 'nilai_rata', 'gaji', 'perusahaan_tepat' columns
+        df: DataFrame with 'lama_kerja_2', 'gaji', 'perusahaan_tepat' columns
         
     Returns:
         str: Base64 encoded plot image
@@ -45,11 +45,11 @@ def generate_gpa_vs_salary_scatter(df):
     tepat_map = {'Tepat': 0, 'Tidak Tepat': 1}
     colors = [tepat_map.get(x, 0) for x in df['perusahaan_tepat']]
     
-    scatter = ax.scatter(df['nilai_rata'], df['gaji'], 
+    scatter = ax.scatter(df['lama_kerja_2'], df['gaji'], 
                         c=colors, cmap='RdYlGn_r', alpha=0.6, s=50)
-    ax.set_xlabel('Nilai Rata-Rata (IPK)', fontsize=12)
+    ax.set_xlabel('Lama Kerja (Tahun)', fontsize=12)
     ax.set_ylabel('Gaji (IDR)', fontsize=12)
-    ax.set_title('Hubungan IPK dengan Gaji', fontsize=14, fontweight='bold')
+    ax.set_title('Hubungan Pengalaman Kerja dengan Gaji', fontsize=14, fontweight='bold')
     ax.grid(True, alpha=0.3)
     plt.tight_layout()
     return plot_to_base64(fig)
@@ -60,7 +60,7 @@ def generate_work_time_vs_satisfaction(df):
     Generate plot: Work time first vs Satisfaction
     
     Args:
-        df: DataFrame with 'waktu_kerja_pertama', 'kepuasan', 'kenyamanan' columns
+        df: DataFrame with 'waktu_kerja_pertama', 'kepuasan', 'nyaman' columns
         
     Returns:
         str: Base64 encoded plot image
@@ -69,7 +69,7 @@ def generate_work_time_vs_satisfaction(df):
     satisfaction_map = {'Kurang Puas': 1, 'Puas': 2, 'Sangat Puas': 3}
     df_plot = df.copy()
     df_plot['satisfaction_num'] = df_plot['kepuasan'].map(satisfaction_map)
-    df_plot['nyaman_num'] = (df_plot['kenyamanan'] == 'Ya').astype(int)
+    df_plot['nyaman_num'] = (df_plot['nyaman'] == 'Ya').astype(int)
     
     scatter = ax.scatter(df_plot['waktu_kerja_pertama'], df_plot['satisfaction_num'],
                         c=df_plot['nyaman_num'], cmap='coolwarm', alpha=0.6, s=50)
@@ -85,25 +85,31 @@ def generate_work_time_vs_satisfaction(df):
 
 def generate_gpa_distribution(df):
     """
-    Generate histogram: GPA distribution
+    Generate bar chart: Satisfaction by Company Type (replaces GPA distribution for SMK)
     
     Args:
-        df: DataFrame with 'nilai_rata', 'perusahaan_tepat' columns
+        df: DataFrame with 'jenis_perusahaan', 'kepuasan' columns
         
     Returns:
         str: Base64 encoded plot image
     """
     fig, ax = plt.subplots(figsize=(10, 6))
-    tepat = df[df['perusahaan_tepat'] == 'Tepat']['nilai_rata']
-    tidak_tepat = df[df['perusahaan_tepat'] == 'Tidak Tepat']['nilai_rata']
     
-    ax.hist(tepat, bins=15, alpha=0.6, label='Tepat', color='green')
-    ax.hist(tidak_tepat, bins=15, alpha=0.6, label='Tidak Tepat', color='red')
-    ax.set_xlabel('Nilai Rata-Rata (IPK)', fontsize=12)
-    ax.set_ylabel('Frekuensi', fontsize=12)
-    ax.set_title('Distribusi IPK Berdasarkan Kesesuaian Perusahaan', fontsize=14, fontweight='bold')
-    ax.legend()
+    # Create satisfaction count by company type
+    if 'jenis_perusahaan' in df.columns and 'kepuasan' in df.columns:
+        # Count satisfaction levels by company type
+        satisfaction_data = df.groupby(['jenis_perusahaan', 'kepuasan']).size().unstack(fill_value=0)
+        satisfaction_data.plot(kind='bar', ax=ax, color=['#e74c3c', '#f39c12', '#27ae60'], alpha=0.8)
+    else:
+        # Fallback if columns don't exist
+        ax.text(0.5, 0.5, 'Data tidak tersedia', ha='center', va='center', fontsize=14)
+    
+    ax.set_xlabel('Jenis Perusahaan', fontsize=12)
+    ax.set_ylabel('Jumlah Alumni', fontsize=12)
+    ax.set_title('Kepuasan Kerja per Jenis Perusahaan', fontsize=14, fontweight='bold')
+    ax.legend(title='Kepuasan', labels=['Tidak Puas', 'Puas', 'Sangat Puas'])
     ax.grid(True, alpha=0.3, axis='y')
+    plt.xticks(rotation=45, ha='right')
     plt.tight_layout()
     return plot_to_base64(fig)
 
@@ -138,7 +144,7 @@ def generate_salary_distribution(df):
 
 def generate_correlation_heatmap(df):
     """
-    Generate correlation heatmap
+    Generate correlation heatmap (without nilai_rata for SMK)
     
     Args:
         df: DataFrame with numeric columns
@@ -147,8 +153,12 @@ def generate_correlation_heatmap(df):
         str: Base64 encoded plot image
     """
     fig, ax = plt.subplots(figsize=(10, 8))
-    numeric_cols = ['nilai_rata', 'gaji', 'lama_kerja_1', 'lama_kerja_2']
-    numeric_data = df[numeric_cols].corr()
+    # Removed 'nilai_rata' - SMK doesn't use GPA
+    numeric_cols = ['gaji', 'lama_kerja_1', 'lama_kerja_2', 'waktu_kerja_pertama']
+    
+    # Filter only existing columns
+    available_cols = [col for col in numeric_cols if col in df.columns]
+    numeric_data = df[available_cols].corr()
     
     sns.heatmap(numeric_data, annot=True, fmt='.2f', cmap='coolwarm', 
                 center=0, square=True, ax=ax, cbar_kws={'label': 'Korelasi'})

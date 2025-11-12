@@ -61,14 +61,57 @@ Sistem rekomendasi pekerjaan berbasis machine learning untuk alumni universitas.
 ## 🔧 Instalasi & Setup
 
 ### Persyaratan Sistem
-- Python 3.7+
+- **Python 3.7+** (Direkomendasikan: Python 3.13.2 ✅)
 - pip (package manager)
 - Browser modern (Chrome, Firefox, Safari, Edge)
 
 ### Install Dependencies
 ```bash
-pip install flask pandas scikit-learn numpy matplotlib seaborn
+# Install semua dependencies dari requirements.txt
+pip install -r requirements.txt
 ```
+
+**Requirements.txt terbaru (Python 3.13.2 compatible):**
+```txt
+# Job Recommendation System - Dependencies
+
+# Web Framework
+Flask==3.1.0
+Werkzeug>=3.1.0
+
+# Machine Learning
+scikit-learn>=1.6.0
+numpy>=1.24.0
+pandas>=2.0.0
+
+# Data Visualization
+matplotlib>=3.7.0
+seaborn>=0.12.0
+
+# Additional Dependencies
+Jinja2>=3.1.0
+MarkupSafe>=2.1.0
+joblib>=1.3.0
+scipy>=1.11.0
+threadpoolctl>=3.2.0
+```
+
+### Troubleshooting Instalasi
+
+#### ❌ Error: "Microsoft Visual C++ 14.0 or greater is required"
+**Solusi**: Update ke Python 3.13.2 atau gunakan versi scikit-learn yang kompatibel:
+```bash
+pip install scikit-learn>=1.6.0
+```
+
+#### ❌ Error: "Cannot install Werkzeug==3.0.1 and flask==3.1.0"
+**Solusi**: Update Werkzeug ke versi 3.1.0+:
+```bash
+pip install Werkzeug>=3.1.0
+```
+
+#### ❌ Error: Column name mismatch di visualisasi
+**Solusi**: Sudah diperbaiki dalam versi terbaru. Pastikan menggunakan `utils/visualization.py` yang terbaru.
 
 ---
 
@@ -305,17 +348,17 @@ Predictions + Probabilities
 
 ### Backend
 - **Flask 3.1.0** - Web framework
-- **Python 3.7+** - Programming language
-- **Werkzeug** - WSGI utility library
+- **Python 3.13.2** - Programming language (✅ Tested & Compatible)
+- **Werkzeug 3.1.3** - WSGI utility library
 
 ### Machine Learning
-- **scikit-learn** - ML algorithms (KNN, K-Means)
-- **pandas** - Data manipulation
-- **numpy** - Numerical computing
+- **scikit-learn 1.6.1** - ML algorithms (KNN, K-Means)
+- **pandas 2.2.3** - Data manipulation
+- **numpy 2.2.3** - Numerical computing
 
 ### Data Visualization
-- **Matplotlib** - Chart generation (Agg backend untuk Flask)
-- **Seaborn** - Statistical data visualization
+- **Matplotlib 3.10.7** - Chart generation (Agg backend untuk Flask)
+- **Seaborn 0.13.2** - Statistical data visualization
 - **Base64** - Image encoding untuk HTML embedding
 
 ### Frontend
@@ -328,6 +371,12 @@ Predictions + Probabilities
 - **CSV** - Dataset format
 - **PKL (Pickle)** - Model serialization
 - **JSON** - Data interchange (implicit)
+
+### Recent Updates (November 13, 2025)
+- ✅ **Fixed emoji display issues** - Replaced corrupted symbols in `index.html`
+- ✅ **Updated requirements.txt** - Compatible with Python 3.13.2
+- ✅ **Fixed visualization functions** - Corrected column name mismatches
+- ✅ **Resolved dependency conflicts** - Flask 3.1.0 + Werkzeug 3.1.3 compatibility
 
 ---
 
@@ -437,6 +486,26 @@ Render result.html
 3. **Scaling Required**: Semua numeric features harus di-scale menggunakan StandardScaler yang sama
 4. **Encoding Consistency**: Categorical features harus di-encode dengan LabelEncoder yang sama
 5. **Cluster Validation**: K=3 optimal untuk dataset ini berdasarkan elbow method
+6. **Python 3.13.2 Compatibility**: ✅ Tested and verified working
+
+### 🔧 Recent Fixes & Updates
+
+#### Version Updates (November 13, 2025)
+- **Fixed Emoji Display**: Replaced all corrupted emoji symbols (���) in `index.html` with proper Unicode emojis
+- **Python 3.13.2 Support**: Updated `requirements.txt` for full compatibility with Python 3.13.2
+- **Dependency Resolution**: Fixed Flask 3.1.0 + Werkzeug 3.1.3 compatibility issues
+- **Visualization Bug Fix**: Corrected column name mismatch (`kenyamanan` → `nyaman`) in visualization functions
+- **Package Versions**: Updated to latest compatible versions:
+  - scikit-learn: 1.3.2 → 1.6.1
+  - Werkzeug: 3.0.1 → 3.1.3
+  - numpy: 1.24.3 → 2.2.3
+  - pandas: 2.0.3 → 2.2.3
+
+#### Installation Issues Resolved
+- ✅ Microsoft Visual C++ compilation errors (resolved by version updates)
+- ✅ Werkzeug dependency conflicts (resolved by version updates)
+- ✅ Visualization function errors (resolved by column name fixes)
+- ✅ Emoji display corruption (resolved by Unicode replacement)
 
 ---
 
@@ -445,8 +514,20 @@ Render result.html
 - **Documentation**: Lihat `DOCUMENTATION_FOR_AI_AGENT.md`
 - **Quick Reference**: Lihat `QUICK_REFERENCE.md`
 - **Last Updated**: November 13, 2025
-- **Status**: ✅ Production Ready
+- **Python Version**: ✅ Compatible with Python 3.13.2
+- **Status**: ✅ Production Ready (All Issues Fixed)
 
 ---
 
 **Dikembangkan dengan ❤️ menggunakan Flask & Machine Learning**
+
+### 🚀 Quick Start Command
+```bash
+# Install dependencies
+pip install -r requirements.txt
+
+# Run the application
+python app.py
+
+# Open browser: http://127.0.0.1:5000
+```
