@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Visualization - JRC</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 32px;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 35px;
+            font-size: 15px;
+        }
+        
+        .viz-grid {
+            display: grid;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        
+        .viz-item {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .viz-item h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 22px;
+        }
+        
+        .viz-item img {
+            width: 100%;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .viz-description {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .viz-description h3 {
+            color: #333;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        
+        .viz-description p {
+            color: #666;
+            line-height: 1.8;
+            margin-bottom: 10px;
+        }
+        
+        .viz-description ul {
+            color: #666;
+            margin-left: 25px;
+            line-height: 1.8;
+        }
+        
+        .insight-box {
+            background: #e8f5e9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            border-left: 4px solid #4CAF50;
+        }
+        
+        .insight-box strong {
+            color: #2E7D32;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .btn {
+            padding: 15px 30px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-block;
+            text-align: center;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: #e0e0e0;
+            color: #333;
+        }
+        
+        .btn-info {
+            background: #2196F3;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📈 Data Visualization</h1>
+        <p class="subtitle">Analisis Visual Data Job Recommendation System</p>
+        
+        <div class="viz-grid">
+            <!-- Visualization 1 -->
+            <div class="viz-item">
+                <h2>1. Hubungan IPK dengan Gaji</h2>
+                <img src="data:image/png;base64,{{ plot1 }}" alt="GPA vs Salary">
+                <div class="viz-description">
+                    <h3>📊 Penjelasan</h3>
+                    <p>Scatter plot ini menunjukkan hubungan antara Nilai Rata-Rata (IPK) dengan Gaji bulanan. Setiap titik mewakili satu responden, dengan warna menunjukkan kesesuaian perusahaan.</p>
+                    <div class="insight-box">
+                        <strong>💡 Key Insights:</strong>
+                        <ul>
+                            <li>IPK lebih tinggi cenderung berkorelasi dengan gaji yang lebih besar</li>
+                            <li>Responden dengan perusahaan "Tepat" (hijau) lebih banyak di range IPK 3.5-4.0</li>
+                            <li>Variasi gaji sangat besar bahkan dengan IPK yang sama</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Visualization 2 -->
+            <div class="viz-item">
+                <h2>2. Waktu Kerja Pertama vs Kepuasan</h2>
+                <img src="data:image/png;base64,{{ plot2 }}" alt="Work Time vs Satisfaction">
+                <div class="viz-description">
+                    <h3>📊 Penjelasan</h3>
+                    <p>Grafik ini menampilkan hubungan antara waktu yang dibutuhkan untuk mendapatkan pekerjaan pertama (dalam bulan) dengan tingkat kepuasan kerja saat ini.</p>
+                    <div class="insight-box">
+                        <strong>💡 Key Insights:</strong>
+                        <ul>
+                            <li>Semakin cepat mendapat kerja pertama tidak selalu berarti lebih puas</li>
+                            <li>Responden yang nyaman di tempat kerja (biru) lebih banyak di kategori "Sangat Puas"</li>
+                            <li>Waktu tunggu 2-6 bulan paling umum untuk semua tingkat kepuasan</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Visualization 3 -->
+            <div class="viz-item">
+                <h2>3. Distribusi IPK Berdasarkan Kesesuaian Perusahaan</h2>
+                <img src="data:image/png;base64,{{ plot3 }}" alt="GPA Distribution">
+                <div class="viz-description">
+                    <h3>📊 Penjelasan</h3>
+                    <p>Histogram yang membandingkan distribusi IPK antara responden yang bekerja di perusahaan yang tepat vs tidak tepat.</p>
+                    <div class="insight-box">
+                        <strong>💡 Key Insights:</strong>
+                        <ul>
+                            <li>Mayoritas responden di perusahaan tepat memiliki IPK 3.0-3.8</li>
+                            <li>Responden di perusahaan tidak tepat cenderung memiliki IPK lebih rendah (2.8-3.2)</li>
+                            <li>Distribusi menunjukkan pentingnya prestasi akademik dalam penempatan kerja</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Visualization 4 -->
+            <div class="viz-item">
+                <h2>4. Distribusi Gaji Berdasarkan Kepuasan</h2>
+                <img src="data:image/png;base64,{{ plot4 }}" alt="Salary Distribution">
+                <div class="viz-description">
+                    <h3>📊 Penjelasan</h3>
+                    <p>Histogram yang menunjukkan distribusi gaji untuk setiap tingkat kepuasan kerja (Kurang Puas, Puas, Sangat Puas).</p>
+                    <div class="insight-box">
+                        <strong>💡 Key Insights:</strong>
+                        <ul>
+                            <li>Responden "Sangat Puas" dominan di range gaji 8-15 juta</li>
+                            <li>Responden "Kurang Puas" kebanyakan di range 3-6 juta</li>
+                            <li>Gaji bukan satu-satunya faktor kepuasan, tapi memiliki korelasi kuat</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Visualization 5 -->
+            <div class="viz-item">
+                <h2>5. Matriks Korelasi Fitur Numerik</h2>
+                <img src="data:image/png;base64,{{ plot5 }}" alt="Correlation Heatmap">
+                <div class="viz-description">
+                    <h3>📊 Penjelasan</h3>
+                    <p>Heatmap yang menunjukkan korelasi antar fitur numerik: IPK, Waktu Kerja Pertama, Lama Kerja Saat Ini, Total Pengalaman, dan Gaji.</p>
+                    <div class="insight-box">
+                        <strong>💡 Key Insights:</strong>
+                        <ul>
+                            <li>Korelasi positif kuat antara "Total Pengalaman" dan "Gaji" (0.5+)</li>
+                            <li>IPK memiliki korelasi positif lemah dengan gaji (0.2-0.3)</li>
+                            <li>Waktu kerja pertama berkorelasi negatif dengan kepuasan (semakin lama mencari kerja, semakin kurang puas)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Visualization 6 -->
+            <div class="viz-item">
+                <h2>6. Distribusi Pengalaman Kerja</h2>
+                <img src="data:image/png;base64,{{ plot6 }}" alt="Experience Box Plot">
+                <div class="viz-description">
+                    <h3>📊 Penjelasan</h3>
+                    <p>Box plot yang membandingkan distribusi total pengalaman kerja antara responden di perusahaan tepat vs tidak tepat.</p>
+                    <div class="insight-box">
+                        <strong>💡 Key Insights:</strong>
+                        <ul>
+                            <li>Median pengalaman kerja di perusahaan tepat lebih tinggi (8-12 tahun)</li>
+                            <li>Responden di perusahaan tidak tepat cenderung memiliki pengalaman lebih sedikit (2-5 tahun)</li>
+                            <li>Outlier menunjukkan beberapa responden dengan pengalaman 15-20 tahun</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Visualization 7 -->
+            <div class="viz-item">
+                <h2>7. Top 10 Bidang Karir Paling Cocok</h2>
+                <img src="data:image/png;base64,{{ plot7 }}" alt="Top Jurusan">
+                <div class="viz-description">
+                    <h3>📊 Penjelasan</h3>
+                    <p>Bar chart horizontal yang menampilkan 10 bidang karir yang paling banyak direkomendasikan oleh sistem.</p>
+                    <div class="insight-box">
+                        <strong>💡 Key Insights:</strong>
+                        <ul>
+                            <li>"Hiburan" dan "Teknologi Informasi" adalah bidang paling populer</li>
+                            <li>Distribusi menunjukkan keberagaman karir di dataset</li>
+                            <li>Bidang "Komunikasi", "Teknik", dan "Keuangan" juga sangat diminati</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Visualization 8 -->
+            <div class="viz-item">
+                <h2>8. Distribusi Kepuasan Kerja</h2>
+                <img src="data:image/png;base64,{{ plot8 }}" alt="Satisfaction Pie Chart">
+                <div class="viz-description">
+                    <h3>📊 Penjelasan</h3>
+                    <p>Pie chart yang menampilkan proporsi responden berdasarkan tingkat kepuasan kerja mereka.</p>
+                    <div class="insight-box">
+                        <strong>💡 Key Insights:</strong>
+                        <ul>
+                            <li>Mayoritas responden (40-50%) merasa "Puas" dengan pekerjaan mereka</li>
+                            <li>"Sangat Puas" dan "Kurang Puas" memiliki proporsi yang seimbang</li>
+                            <li>Tingkat kepuasan tinggi menunjukkan kesesuaian karir yang baik</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="button-group">
+            <a href="/" class="btn btn-primary">🏠 Home</a>
+            <a href="/metrics" class="btn btn-info">📊 Model Metrics</a>
+            <a href="/clustering" class="btn btn-primary">🔷 K-Means Clustering</a>
+            <a href="/" class="btn btn-secondary">🔄 Survey Baru</a>
+        </div>
+    </div>
+</body>
+</html>

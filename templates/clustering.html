@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>K-Means Clustering - Sistem Rekomendasi Karir</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        
+        .nav-buttons {
+            background: #f8f9fa;
+            padding: 20px 30px;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .nav-btn {
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            text-decoration: none;
+            display: inline-block;
+            transition: background 0.3s;
+        }
+        
+        .nav-btn:hover {
+            background: #764ba2;
+        }
+        
+        .content {
+            padding: 40px 30px;
+        }
+        
+        .info-box {
+            background: #f0f4ff;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 5px;
+        }
+        
+        .info-box h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        .info-box p {
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .plots-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .plot-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .plot-card h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+            text-align: center;
+        }
+        
+        .plot-card img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+        
+        .stats-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .stats-box h3 {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+        
+        .stats-box p {
+            font-size: 2em;
+            font-weight: bold;
+        }
+        
+        .description {
+            background: #fff9e6;
+            border-left: 4px solid #ffc107;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        
+        .description h4 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+        
+        .description p {
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        @media (max-width: 768px) {
+            .plots-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 1.8em;
+            }
+            
+            .nav-buttons {
+                flex-direction: column;
+            }
+            
+            .nav-btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
+        
+        .footer {
+            background: #f8f9fa;
+            padding: 20px 30px;
+            text-align: center;
+            border-top: 1px solid #ddd;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔷 Analisis K-Means Clustering</h1>
+            <p>Pembelajaran Unsupervised - Segmentasi Pelanggan</p>
+        </div>
+        
+        <div class="nav-buttons">
+            <a href="/" class="nav-btn">🏠 Beranda</a>
+            <a href="/metrics" class="nav-btn">📊 Metrik Model</a>
+            <a href="/visualize" class="nav-btn">📈 Visualisasi Supervised</a>
+            <a href="/clustering" class="nav-btn" style="background: #764ba2;">🔷 Clustering</a>
+        </div>
+        
+        <div class="content">
+            <!-- Overview Section -->
+            <div class="info-box">
+                <h3>📚 Tentang K-Means Clustering</h3>
+                <p>
+                    <strong>K-Means</strong> adalah algoritma pembelajaran unsupervised yang mempartisi data ke dalam k cluster 
+                    berdasarkan kesamaan fitur. Analisis ini mensegmentasikan pencari kerja ke dalam {{ optimal_k }} kelompok berbeda 
+                    berdasarkan IPK mereka (nilai_rata), ekspektasi gaji (gaji), dan total pengalaman kerja (lama_kerja_2).
+                </p>
+            </div>
+            
+            <!-- Stats -->
+            <div class="stats-box">
+                <h3>Jumlah Cluster Optimal</h3>
+                <p>k = {{ optimal_k }}</p>
+            </div>
+            
+            <!-- Elbow Method Section -->
+            <div class="description">
+                <h4>📉 Penjelasan Metode Elbow</h4>
+                <p>
+                    Metode Elbow membantu menentukan jumlah cluster optimal dengan memplot inertia (jumlah kuadrat dalam cluster) 
+                    terhadap jumlah cluster. Titik "siku" menunjukkan di mana menambah lebih banyak cluster memberikan hasil yang tidak signifikan. 
+                    Untuk dataset ini, <strong>k={{ optimal_k }}</strong> adalah pilihan optimal, ditandai dengan garis putus-putus merah.
+                </p>
+            </div>
+            
+            <!-- Plots -->
+            <div class="plots-grid">
+                <!-- Elbow Curve -->
+                <div class="plot-card">
+                    <h3>Kurva Elbow</h3>
+                    <img src="data:image/png;base64,{{ elbow_plot }}" alt="Plot Metode Elbow">
+                </div>
+                
+                <!-- Cluster Scatter Plot -->
+                <div class="plot-card">
+                    <h3>Visualisasi Cluster</h3>
+                    <img src="data:image/png;base64,{{ cluster_plot }}" alt="Plot Cluster K-Means">
+                </div>
+            </div>
+            
+            <!-- Interpretation Section -->
+            <div class="description">
+                <h4>💡 Interpretasi Cluster</h4>
+                <p>
+                    Visualisasi clustering menunjukkan pencari kerja tersebar ke dalam {{ optimal_k }} segmen berbeda:
+                </p>
+                <ul style="margin: 15px 0 0 20px; line-height: 1.8;">
+                    <li><strong>Cluster Merah:</strong> Satu segmen pencari kerja</li>
+                    <li><strong>Cluster Hijau Terang:</strong> Segmen lain dengan karakteristik berbeda</li>
+                    <li><strong>Cluster Biru:</strong> Segmen ketiga dengan pola unik</li>
+                    <li><strong>Bintang Kuning:</strong> Mewakili centroid cluster (pusat)</li>
+                </ul>
+                <p style="margin-top: 15px;">
+                    Cluster ini mewakili pengelompokan alami dalam data, yang dapat berguna untuk rekomendasi karir yang ditargetkan 
+                    dan strategi coaching yang dipersonalisasi.
+                </p>
+            </div>
+            
+            <!-- Algorithm Details -->
+            <div class="info-box" style="margin-top: 30px;">
+                <h3>🔧 Detail Algoritma K-Means</h3>
+                <p>
+                    <strong>Fitur yang Digunakan untuk Clustering:</strong><br>
+                    • Nilai Rata-Rata (IPK)<br>
+                    • Gaji (Gaji Bulanan)<br>
+                    • Lama Kerja Total (Total Pengalaman Kerja)<br><br>
+                    <strong>Langkah-Langkah Algoritma:</strong><br>
+                    1. Standarisasi fitur menggunakan StandardScaler<br>
+                    2. Terapkan Metode Elbow untuk menemukan k optimal (1-10)<br>
+                    3. Latih K-Means dengan k={{ optimal_k }} cluster<br>
+                    4. Identifikasi centroid dan penugasan cluster<br>
+                    5. Visualisasikan hasil dalam ruang 2D<br><br>
+                    <strong>Inertia:</strong> Mengukur kepadatan cluster (nilai lebih rendah lebih baik)
+                </p>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Sistem Rekomendasi Karir | Analisis K-Means Clustering | Pembelajaran Unsupervised</p>
+        </div>
+    </div>
+</body>
+</html>
