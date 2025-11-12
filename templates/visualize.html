@@ -1,181 +1,44 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Data Visualization - JRC</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 20px;
-            min-height: 100vh;
-        }
-        
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            background: white;
-            padding: 40px;
-            border-radius: 15px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-        }
-        
-        h1 {
-            text-align: center;
-            color: #667eea;
-            margin-bottom: 15px;
-            font-size: 32px;
-        }
-        
-        .subtitle {
-            text-align: center;
-            color: #666;
-            margin-bottom: 35px;
-            font-size: 15px;
-        }
-        
-        .viz-grid {
-            display: grid;
-            gap: 40px;
-            margin-bottom: 40px;
-        }
-        
-        .viz-item {
-            background: #f8f9fa;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        
-        .viz-item h2 {
-            color: #667eea;
-            margin-bottom: 15px;
-            font-size: 22px;
-        }
-        
-        .viz-item img {
-            width: 100%;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-        
-        .viz-description {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            border-left: 4px solid #667eea;
-        }
-        
-        .viz-description h3 {
-            color: #333;
-            font-size: 16px;
-            margin-bottom: 10px;
-        }
-        
-        .viz-description p {
-            color: #666;
-            line-height: 1.8;
-            margin-bottom: 10px;
-        }
-        
-        .viz-description ul {
-            color: #666;
-            margin-left: 25px;
-            line-height: 1.8;
-        }
-        
-        .insight-box {
-            background: #e8f5e9;
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 15px;
-            border-left: 4px solid #4CAF50;
-        }
-        
-        .insight-box strong {
-            color: #2E7D32;
-        }
-        
-        .button-group {
-            display: flex;
-            gap: 15px;
-            margin-top: 30px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-        
-        .btn {
-            padding: 15px 30px;
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: 600;
-            transition: all 0.3s;
-            display: inline-block;
-            text-align: center;
-        }
-        
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-        
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
-        
-        .btn-secondary {
-            background: #e0e0e0;
-            color: #333;
-        }
-        
-        .btn-info {
-            background: #2196F3;
-            color: white;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/visualize.css') }}">
 </head>
+
 <body>
     <div class="container">
-        <h1>📈 Data Visualization</h1>
-        <p class="subtitle">Analisis Visual Data Job Recommendation System</p>
-        
-        <div class="viz-grid">
-            <!-- Visualization 1 -->
-            <div class="viz-item">
-                <h2>1. Hubungan Pengalaman Kerja dengan Gaji</h2>
-                <img src="data:image/png;base64,{{ plot1 }}" alt="Experience vs Salary">
-                <div class="viz-description">
-                    <h3>📊 Penjelasan</h3>
-                    <p>Scatter plot ini menunjukkan hubungan antara Lama Bekerja (dalam tahun) dengan Gaji bulanan. Setiap titik mewakili satu alumni SMK, dengan warna menunjukkan kesesuaian perusahaan.</p>
-                    <div class="insight-box">
-                        <strong>💡 Key Insights:</strong>
+        <div class="header">
+            <h1>📈 Data Visualization</h1>
+            <p class="subtitle">Analisis Visual Data Job Recommendation System</p>
+        </div>
+
+        <div class="charts-section">
+            <h2>Data Visualizations</h2>
+            <div class="charts-grid">
+                <!-- Visualization 1 -->
+                <div class="chart-container">
+                    <h3>1. Hubungan Pengalaman Kerja dengan Gaji</h3>
+                    <img src="data:image/png;base64,{{ plot1 }}" alt="Experience vs Salary">
+                    <div class="insight-card">
+                        <h4>💡 Key Insights:</h4>
                         <ul>
                             <li>Pengalaman kerja lebih lama cenderung berkorelasi dengan gaji yang lebih tinggi</li>
-                            <li>Alumni di perusahaan "Tepat" (hijau) umumnya mendapat gaji lebih baik untuk pengalaman yang sama</li>
+                            <li>Alumni di perusahaan "Tepat" (hijau) umumnya mendapat gaji lebih baik untuk pengalaman
+                                yang sama</li>
                             <li>Variasi gaji menunjukkan faktor lain seperti jenis perusahaan juga berpengaruh</li>
                         </ul>
                     </div>
                 </div>
-            </div>
-            
-            <!-- Visualization 2 -->
-            <div class="viz-item">
-                <h2>2. Waktu Kerja Pertama vs Kepuasan</h2>
-                <img src="data:image/png;base64,{{ plot2 }}" alt="Work Time vs Satisfaction">
-                <div class="viz-description">
-                    <h3>📊 Penjelasan</h3>
-                    <p>Grafik ini menampilkan hubungan antara waktu yang dibutuhkan untuk mendapatkan pekerjaan pertama (dalam bulan) dengan tingkat kepuasan kerja saat ini.</p>
-                    <div class="insight-box">
-                        <strong>💡 Key Insights:</strong>
+
+                <!-- Visualization 2 -->
+                <div class="chart-container">
+                    <h3>2. Waktu Kerja Pertama vs Kepuasan</h3>
+                    <img src="data:image/png;base64,{{ plot2 }}" alt="Work Time vs Satisfaction">
+                    <div class="insight-card">
+                        <h4>💡 Key Insights:</h4>
                         <ul>
                             <li>Semakin cepat mendapat kerja pertama tidak selalu berarti lebih puas</li>
                             <li>Responden yang nyaman di tempat kerja (biru) lebih banyak di kategori "Sangat Puas"</li>
@@ -183,17 +46,13 @@
                         </ul>
                     </div>
                 </div>
-            </div>
-            
-            <!-- Visualization 3 -->
-            <div class="viz-item">
-                <h2>3. Kepuasan Kerja per Jenis Perusahaan</h2>
-                <img src="data:image/png;base64,{{ plot3 }}" alt="Satisfaction by Company Type">
-                <div class="viz-description">
-                    <h3>📊 Penjelasan</h3>
-                    <p>Bar chart yang menampilkan tingkat kepuasan kerja alumni SMK berdasarkan jenis perusahaan tempat mereka bekerja (BUMN, PNS, Swasta, Wirausaha).</p>
-                    <div class="insight-box">
-                        <strong>💡 Key Insights:</strong>
+
+                <!-- Visualization 3 -->
+                <div class="chart-container">
+                    <h3>3. Kepuasan Kerja per Jenis Perusahaan</h3>
+                    <img src="data:image/png;base64,{{ plot3 }}" alt="Satisfaction by Company Type">
+                    <div class="insight-card">
+                        <h4>💡 Key Insights:</h4>
                         <ul>
                             <li>Alumni di BUMN dan PNS cenderung memiliki kepuasan lebih tinggi</li>
                             <li>Perusahaan Swasta memiliki variasi kepuasan paling beragam</li>
@@ -201,17 +60,13 @@
                         </ul>
                     </div>
                 </div>
-            </div>
-            
-            <!-- Visualization 4 -->
-            <div class="viz-item">
-                <h2>4. Distribusi Gaji Berdasarkan Kepuasan</h2>
-                <img src="data:image/png;base64,{{ plot4 }}" alt="Salary Distribution">
-                <div class="viz-description">
-                    <h3>📊 Penjelasan</h3>
-                    <p>Histogram yang menunjukkan distribusi gaji untuk setiap tingkat kepuasan kerja (Kurang Puas, Puas, Sangat Puas).</p>
-                    <div class="insight-box">
-                        <strong>💡 Key Insights:</strong>
+
+                <!-- Visualization 4 -->
+                <div class="chart-container">
+                    <h3>4. Distribusi Gaji Berdasarkan Kepuasan</h3>
+                    <img src="data:image/png;base64,{{ plot4 }}" alt="Salary Distribution">
+                    <div class="insight-card">
+                        <h4>💡 Key Insights:</h4>
                         <ul>
                             <li>Responden "Sangat Puas" dominan di range gaji 8-15 juta</li>
                             <li>Responden "Kurang Puas" kebanyakan di range 3-6 juta</li>
@@ -219,53 +74,41 @@
                         </ul>
                     </div>
                 </div>
-            </div>
-            
-            <!-- Visualization 5 -->
-            <div class="viz-item">
-                <h2>5. Matriks Korelasi Fitur Numerik</h2>
-                <img src="data:image/png;base64,{{ plot5 }}" alt="Correlation Heatmap">
-                <div class="viz-description">
-                    <h3>📊 Penjelasan</h3>
-                    <p>Heatmap yang menunjukkan korelasi antar fitur numerik: Gaji, Lama Kerja Saat Ini, Total Pengalaman Kerja, dan Waktu Tunggu Kerja Pertama.</p>
-                    <div class="insight-box">
-                        <strong>💡 Key Insights:</strong>
+
+                <!-- Visualization 5 -->
+                <div class="chart-container">
+                    <h3>5. Matriks Korelasi Fitur Numerik</h3>
+                    <img src="data:image/png;base64,{{ plot5 }}" alt="Correlation Heatmap">
+                    <div class="insight-card">
+                        <h4>💡 Key Insights:</h4>
                         <ul>
                             <li>Korelasi positif kuat antara "Total Pengalaman" dan "Gaji" (0.5+)</li>
                             <li>Lama kerja memiliki korelasi positif dengan gaji dan kepuasan</li>
-                            <li>Waktu tunggu kerja pertama berkorelasi negatif dengan kepuasan (semakin lama mencari kerja, semakin kurang puas)</li>
+                            <li>Waktu tunggu kerja pertama berkorelasi negatif dengan kepuasan</li>
                         </ul>
                     </div>
                 </div>
-            </div>
-            
-            <!-- Visualization 6 -->
-            <div class="viz-item">
-                <h2>6. Distribusi Pengalaman Kerja</h2>
-                <img src="data:image/png;base64,{{ plot6 }}" alt="Experience Box Plot">
-                <div class="viz-description">
-                    <h3>📊 Penjelasan</h3>
-                    <p>Box plot yang membandingkan distribusi total pengalaman kerja antara responden di perusahaan tepat vs tidak tepat.</p>
-                    <div class="insight-box">
-                        <strong>💡 Key Insights:</strong>
+
+                <!-- Visualization 6 -->
+                <div class="chart-container">
+                    <h3>6. Distribusi Pengalaman Kerja</h3>
+                    <img src="data:image/png;base64,{{ plot6 }}" alt="Experience Box Plot">
+                    <div class="insight-card">
+                        <h4>💡 Key Insights:</h4>
                         <ul>
                             <li>Median pengalaman kerja di perusahaan tepat lebih tinggi (8-12 tahun)</li>
-                            <li>Responden di perusahaan tidak tepat cenderung memiliki pengalaman lebih sedikit (2-5 tahun)</li>
+                            <li>Responden di perusahaan tidak tepat cenderung memiliki pengalaman lebih sedikit</li>
                             <li>Outlier menunjukkan beberapa responden dengan pengalaman 15-20 tahun</li>
                         </ul>
                     </div>
                 </div>
-            </div>
-            
-            <!-- Visualization 7 -->
-            <div class="viz-item">
-                <h2>7. Top 10 Bidang Karir Paling Cocok</h2>
-                <img src="data:image/png;base64,{{ plot7 }}" alt="Top Jurusan">
-                <div class="viz-description">
-                    <h3>📊 Penjelasan</h3>
-                    <p>Bar chart horizontal yang menampilkan 10 bidang karir yang paling banyak direkomendasikan oleh sistem.</p>
-                    <div class="insight-box">
-                        <strong>💡 Key Insights:</strong>
+
+                <!-- Visualization 7 -->
+                <div class="chart-container">
+                    <h3>7. Top 10 Bidang Karir Paling Cocok</h3>
+                    <img src="data:image/png;base64,{{ plot7 }}" alt="Top Jurusan">
+                    <div class="insight-card">
+                        <h4>💡 Key Insights:</h4>
                         <ul>
                             <li>"Hiburan" dan "Teknologi Informasi" adalah bidang paling populer</li>
                             <li>Distribusi menunjukkan keberagaman karir di dataset</li>
@@ -273,17 +116,13 @@
                         </ul>
                     </div>
                 </div>
-            </div>
-            
-            <!-- Visualization 8 -->
-            <div class="viz-item">
-                <h2>8. Distribusi Kepuasan Kerja</h2>
-                <img src="data:image/png;base64,{{ plot8 }}" alt="Satisfaction Pie Chart">
-                <div class="viz-description">
-                    <h3>📊 Penjelasan</h3>
-                    <p>Pie chart yang menampilkan proporsi responden berdasarkan tingkat kepuasan kerja mereka.</p>
-                    <div class="insight-box">
-                        <strong>💡 Key Insights:</strong>
+
+                <!-- Visualization 8 -->
+                <div class="chart-container">
+                    <h3>8. Distribusi Kepuasan Kerja</h3>
+                    <img src="data:image/png;base64,{{ plot8 }}" alt="Satisfaction Pie Chart">
+                    <div class="insight-card">
+                        <h4>💡 Key Insights:</h4>
                         <ul>
                             <li>Mayoritas responden (40-50%) merasa "Puas" dengan pekerjaan mereka</li>
                             <li>"Sangat Puas" dan "Kurang Puas" memiliki proporsi yang seimbang</li>
@@ -293,13 +132,14 @@
                 </div>
             </div>
         </div>
-        
-        <div class="button-group">
-            <a href="/" class="btn btn-primary">🏠 Home</a>
-            <a href="/metrics" class="btn btn-info">📊 Model Metrics</a>
-            <a href="/clustering" class="btn btn-primary">🔷 K-Means Clustering</a>
-            <a href="/" class="btn btn-secondary">🔄 Survey Baru</a>
+
+        <div class="nav-links">
+            <a href="/" class="btn-primary">🏠 Home</a>
+            <a href="/metrics" class="btn-info">📊 Model Metrics</a>
+            <a href="/clustering" class="btn-primary">🔷 Clustering</a>
+            <a href="/" class="btn-secondary">🔄 Survey Baru</a>
         </div>
     </div>
 </body>
+
 </html>
