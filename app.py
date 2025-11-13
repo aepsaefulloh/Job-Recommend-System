@@ -55,12 +55,34 @@ def result():
         return render_template('result.html',
                              email=processed_data['email'],
                              nama=processed_data['nama'],
+                             tempat_tinggal=processed_data['tempat_tinggal'],
                              status_bekerja=processed_data['status_bekerja'],
                              jurusan_cocok=predictions['jurusan_cocok'],
                              perusahaan_tepat=predictions['perusahaan_tepat'])
     
     except Exception as e:
-        return f"Error during prediction: {str(e)}", 500
+        import traceback
+        error_details = traceback.format_exc()
+        print(f"\n❌ Error during prediction:\n{error_details}")
+        
+        # User-friendly error message
+        return f"""
+        <div style="font-family: Arial; max-width: 800px; margin: 50px auto; padding: 30px; background: #fee2e2; border-radius: 10px; border-left: 5px solid #dc2626;">
+            <h2 style="color: #dc2626;">❌ Terjadi Kesalahan</h2>
+            <p style="color: #333; line-height: 1.6;">
+                Maaf, sistem tidak dapat memproses data Anda saat ini. 
+                Kemungkinan ada data yang tidak sesuai dengan model yang sudah dilatih.
+            </p>
+            <p style="color: #666; font-size: 14px; margin-top: 20px;">
+                <strong>Detail Error:</strong> {str(e)}
+            </p>
+            <div style="margin-top: 30px;">
+                <a href="/" style="background: #10b981; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; display: inline-block;">
+                    ← Kembali ke Form
+                </a>
+            </div>
+        </div>
+        """, 500
 
 @app.route('/metrics')
 def metrics():

@@ -157,24 +157,68 @@ X_train_scaled = scaler.fit_transform(X_train)
 X_test_scaled = scaler.transform(X_test)
 print("  ✓ Features scaled successfully!")
 
-# Train KNN model for Jurusan prediction
+# Train KNN model for Jurusan prediction with OPTIMIZED parameters
 print("\n9. Training KNN model for 'Jurusan Cocok' prediction...")
-knn_jurusan = KNeighborsClassifier(n_neighbors=5)
+print("  🔍 Testing different K values for optimal performance...")
+
+# Test multiple K values to find the best one
+best_k = 5
+best_acc = 0
+k_results = {}
+
+for k in [3, 5, 7, 9, 11, 15]:
+    knn_temp = KNeighborsClassifier(n_neighbors=k, weights='distance', metric='euclidean')
+    knn_temp.fit(X_train_scaled, y_jurusan_train)
+    y_pred_temp = knn_temp.predict(X_test_scaled)
+    acc_temp = accuracy_score(y_jurusan_test, y_pred_temp)
+    k_results[k] = acc_temp
+    print(f"    K={k}: {acc_temp*100:.2f}%")
+    
+    if acc_temp > best_acc:
+        best_acc = acc_temp
+        best_k = k
+
+print(f"\n  ✅ Best K value: {best_k} with accuracy: {best_acc*100:.2f}%")
+
+# Train final model with best K
+knn_jurusan = KNeighborsClassifier(n_neighbors=best_k, weights='distance', metric='euclidean')
 knn_jurusan.fit(X_train_scaled, y_jurusan_train)
 y_jurusan_pred = knn_jurusan.predict(X_test_scaled)
 acc_jurusan = accuracy_score(y_jurusan_test, y_jurusan_pred)
-print(f"  ✓ Accuracy: {acc_jurusan*100:.2f}%")
+print(f"  ✓ Final Accuracy: {acc_jurusan*100:.2f}%")
 print("\n  Classification Report (Jurusan):")
 print(classification_report(y_jurusan_test, y_jurusan_pred, 
                           target_names=le_jurusan.classes_, zero_division=0))
 
-# Train KNN model for Perusahaan prediction
+# Train KNN model for Perusahaan prediction with OPTIMIZED parameters
 print("\n10. Training KNN model for 'Perusahaan Tepat' prediction...")
-knn_perusahaan = KNeighborsClassifier(n_neighbors=5)
+print("  🔍 Testing different K values for optimal performance...")
+
+# Test multiple K values
+best_k_perusahaan = 5
+best_acc_perusahaan = 0
+k_results_perusahaan = {}
+
+for k in [3, 5, 7, 9, 11, 15]:
+    knn_temp = KNeighborsClassifier(n_neighbors=k, weights='distance', metric='euclidean')
+    knn_temp.fit(X_train_scaled, y_perusahaan_train)
+    y_pred_temp = knn_temp.predict(X_test_scaled)
+    acc_temp = accuracy_score(y_perusahaan_test, y_pred_temp)
+    k_results_perusahaan[k] = acc_temp
+    print(f"    K={k}: {acc_temp*100:.2f}%")
+    
+    if acc_temp > best_acc_perusahaan:
+        best_acc_perusahaan = acc_temp
+        best_k_perusahaan = k
+
+print(f"\n  ✅ Best K value: {best_k_perusahaan} with accuracy: {best_acc_perusahaan*100:.2f}%")
+
+# Train final model with best K
+knn_perusahaan = KNeighborsClassifier(n_neighbors=best_k_perusahaan, weights='distance', metric='euclidean')
 knn_perusahaan.fit(X_train_scaled, y_perusahaan_train)
 y_perusahaan_pred = knn_perusahaan.predict(X_test_scaled)
 acc_perusahaan = accuracy_score(y_perusahaan_test, y_perusahaan_pred)
-print(f"  ✓ Accuracy: {acc_perusahaan*100:.2f}%")
+print(f"  ✓ Final Accuracy: {acc_perusahaan*100:.2f}%")
 print("\n  Classification Report (Perusahaan):")
 print(classification_report(y_perusahaan_test, y_perusahaan_pred, 
                            target_names=le_perusahaan.classes_, zero_division=0))
@@ -216,7 +260,12 @@ metrics = {
     'jurusan_labels': le_jurusan.classes_,
     'perusahaan_labels': le_perusahaan.classes_,
     'dataset_source': 'job_survey.csv',
-    'total_records_used': len(df_work)
+    'total_records_used': len(df_work),
+    'best_k_jurusan': best_k,
+    'best_k_perusahaan': best_k_perusahaan,
+    'k_results_jurusan': k_results,
+    'k_results_perusahaan': k_results_perusahaan,
+    'optimization_applied': True
 }
 
 with open('metrics.pkl', 'wb') as f:

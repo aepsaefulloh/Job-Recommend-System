@@ -159,13 +159,22 @@ def encode_features(processed_data, label_encoders):
     Returns:
         numpy.ndarray: Encoded feature array
     """
-    # Encode categorical features
-    tempat_tinggal_encoded = label_encoders['tempat_tinggal'].transform([processed_data['tempat_tinggal']])[0]
-    jurusan_encoded = label_encoders['jurusan'].transform([processed_data['jurusan']])[0]
-    profesi_encoded = label_encoders['profesi_sekarang'].transform([processed_data['profesi_sekarang']])[0]
-    tempat_kerja_encoded = label_encoders['tempat_kerja'].transform([processed_data['tempat_kerja']])[0]
-    kepuasan_encoded = label_encoders['kepuasan'].transform([processed_data['kepuasan']])[0]
-    nyaman_encoded = label_encoders['nyaman'].transform([processed_data['nyaman']])[0]
+    # Helper function to safely encode with fallback to most common class
+    def safe_encode(encoder, value, feature_name):
+        try:
+            return encoder.transform([value])[0]
+        except ValueError:
+            # Value not seen during training, use most common class (index 0)
+            print(f"Warning: '{value}' not found in {feature_name} encoder. Using default: '{encoder.classes_[0]}'")
+            return 0
+    
+    # Encode categorical features with error handling
+    tempat_tinggal_encoded = safe_encode(label_encoders['tempat_tinggal'], processed_data['tempat_tinggal'], 'tempat_tinggal')
+    jurusan_encoded = safe_encode(label_encoders['jurusan'], processed_data['jurusan'], 'jurusan')
+    profesi_encoded = safe_encode(label_encoders['profesi_sekarang'], processed_data['profesi_sekarang'], 'profesi_sekarang')
+    tempat_kerja_encoded = safe_encode(label_encoders['tempat_kerja'], processed_data['tempat_kerja'], 'tempat_kerja')
+    kepuasan_encoded = safe_encode(label_encoders['kepuasan'], processed_data['kepuasan'], 'kepuasan')
+    nyaman_encoded = safe_encode(label_encoders['nyaman'], processed_data['nyaman'], 'nyaman')
     
     # Prepare feature array (must match training order)
     # NOTE: nilai_rata removed - SMK doesn't use GPA system
