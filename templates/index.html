@@ -1,33 +1,79 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Survey Alumni - SMK Makarya 1 Jakarta</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
 </head>
+
 <body>
     <div class="container">
         <div class="header">
             <h1>📝 Survey Alumni</h1>
-            <p class="subtitle">PEMANFAATAN ALGORITMA K-NEAREST NEIGHBORS<br>DALAM MEMPERTEMUKAN LULUSAN DENGAN PERUSAHAAN YANG TEPAT</p>
+            <p class="subtitle">PEMANFAATAN ALGORITMA K-NEAREST NEIGHBORS<br>DALAM MEMPERTEMUKAN LULUSAN DENGAN
+                PERUSAHAAN YANG TEPAT</p>
             <p>(Studi Kasus SMK Makarya 1 Jakarta)</p>
         </div>
-        <form action="/result" method="POST" id="surveyForm">
+        <form action="/result" method="POST" id="surveyForm" role="form" aria-describedby="form-status">
+            <div id="form-status" class="sr-only" aria-live="polite"></div>
+            <div class="steps">
+                <span class="step-current">Step 1: Informasi Dasar</span>
+                <span>Step 2: Detail Tambahan</span>
+            </div>
+            <div class="progress" aria-hidden="true">
+                <div class="progress-bar" id="progressBar" style="width:50%"></div>
+            </div>
             <div class="section">
                 <h2>📋 Section 1 - Informasi Dasar</h2>
                 <div class="form-group">
-                    <label for="email">Email <span class="required">*</span></label>
-                    <input type="email" id="email" name="email" required placeholder="contoh@email.com">
-                    <div class="hint">Masukkan email aktif Anda</div>
+                    <label for="email">Email <span class="required">*</span>
+                        <span class="help-tooltip" tabindex="0" aria-describedby="tip_email">
+                            <span class="icon">i</span>
+                            <span class="content" id="tip_email" role="tooltip">
+                                Gunakan email aktif untuk menerima hasil rekomendasi. Hindari spasi, gunakan huruf
+                                kecil.
+                                <span class="caret" aria-hidden="true"></span>
+                            </span>
+                        </span>
+                    </label>
+                    <input type="email" id="email" name="email" required placeholder="contoh@email.com"
+                        aria-required="true" aria-describedby="hint_email"
+                        title="Gunakan email aktif untuk menerima hasil">
+                    <div class="hint" id="hint_email">Masukkan email aktif Anda</div>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Nomor HP <small>(opsional)</small>
+                        <span class="help-tooltip" tabindex="0" aria-describedby="tip_phone">
+                            <span class="icon">i</span>
+                            <span class="content" id="tip_phone" role="tooltip">
+                                Format disarankan: 08xx-xxxx-xxxx atau +62. Hanya angka, otomatis diformat.
+                                <span class="caret" aria-hidden="true"></span>
+                            </span>
+                        </span>
+                    </label>
+                    <input type="tel" id="phone" name="phone" placeholder="08xx-xxxx-xxxx" inputmode="tel"
+                        aria-describedby="hint_phone">
+                    <div class="hint" id="hint_phone">Contoh: 0812-3456-7890</div>
                 </div>
                 <div class="form-group">
                     <label for="nama">Nama Lengkap <span class="required">*</span></label>
-                    <input type="text" id="nama" name="nama" required placeholder="Nama lengkap Anda">
+                    <input type="text" id="nama" name="nama" required placeholder="Nama lengkap Anda"
+                        aria-required="true" title="Nama lengkap sesuai identitas">
                 </div>
                 <div class="form-group">
-                    <label for="tempat_tinggal">Tempat Tinggal <span class="required">*</span></label>
-                    <select id="tempat_tinggal" name="tempat_tinggal" required>
+                    <label for="tempat_tinggal">Tempat Tinggal <span class="required">*</span>
+                        <span class="help-tooltip" tabindex="0" aria-describedby="tip_domisili">
+                            <span class="icon">i</span>
+                            <span class="content" id="tip_domisili" role="tooltip">
+                                Pilih domisili saat ini untuk menyesuaikan rekomendasi perusahaan.
+                                <span class="caret" aria-hidden="true"></span>
+                            </span>
+                        </span>
+                    </label>
+                    <select id="tempat_tinggal" name="tempat_tinggal" required aria-required="true"
+                        title="Pilih kota domisili saat ini">
                         <option value="">-- Pilih Kota --</option>
                         <option value="Jakarta">Jakarta</option>
                         <option value="Depok">Depok</option>
@@ -37,8 +83,16 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="jurusan">Jurusan saat SMK <span class="required">*</span></label>
-                    <select id="jurusan" name="jurusan" required>
+                    <label for="jurusan">Jurusan saat SMK <span class="required">*</span>
+                        <span class="help-tooltip" tabindex="0" aria-describedby="tip_jurusan">
+                            <span class="icon">i</span>
+                            <span class="content" id="tip_jurusan" role="tooltip">
+                                Pilih jurusan Anda ketika SMK. Ini mempengaruhi rekomendasi jurusan/pekerjaan.
+                                <span class="caret" aria-hidden="true"></span>
+                            </span>
+                        </span>
+                    </label>
+                    <select id="jurusan" name="jurusan" required aria-required="true" title="Jurusan saat di SMK">
                         <option value="">-- Pilih Jurusan --</option>
                         <option value="Akuntansi">Akuntansi</option>
                         <option value="Perkantoran">Perkantoran (Administrasi Perkantoran)</option>
@@ -46,7 +100,15 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>Apakah Anda saat ini sudah bekerja? <span class="required">*</span></label>
+                    <label>Apakah Anda saat ini sudah bekerja? <span class="required">*</span>
+                        <span class="help-tooltip" tabindex="0" aria-describedby="tip_status">
+                            <span class="icon">i</span>
+                            <span class="content" id="tip_status" role="tooltip">
+                                Pilihan ini akan menampilkan pertanyaan lanjutan yang sesuai dengan kondisi Anda.
+                                <span class="caret" aria-hidden="true"></span>
+                            </span>
+                        </span>
+                    </label>
                     <div class="radio-group">
                         <div class="radio-option">
                             <input type="radio" id="bekerja_ya" name="status_bekerja" value="Ya" required>
@@ -64,11 +126,13 @@
                     <h2>💼 Section 2 - Untuk Yang Sudah Bekerja</h2>
                     <div class="form-group">
                         <label for="profesi_sekarang">Apa profesi Anda saat ini? <span class="required">*</span></label>
-                        <input type="text" id="profesi_sekarang" name="profesi_sekarang" placeholder="Contoh: Staff Administrasi, Marketing, Akuntan, dll">
+                        <input type="text" id="profesi_sekarang" name="profesi_sekarang"
+                            placeholder="Contoh: Staff Administrasi, Marketing, Akuntan, dll">
                         <div class="hint">Tuliskan posisi/jabatan pekerjaan Anda saat ini</div>
                     </div>
                     <div class="form-group">
-                        <label for="tempat_kerja_saat_ini">Tempat pekerjaan saat ini <span class="required">*</span></label>
+                        <label for="tempat_kerja_saat_ini">Tempat pekerjaan saat ini <span
+                                class="required">*</span></label>
                         <select id="tempat_kerja_saat_ini" name="tempat_kerja_saat_ini">
                             <option value="">-- Pilih Lokasi --</option>
                             <option value="Jakarta">Jakarta</option>
@@ -79,24 +143,29 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Bagaimana Anda mendapatkan pekerjaan Anda saat ini? <span class="required">*</span></label>
+                        <label>Bagaimana Anda mendapatkan pekerjaan Anda saat ini? <span
+                                class="required">*</span></label>
                         <div class="checkbox-group">
                             <div class="checkbox-option">
-                                <input type="checkbox" id="cara_keluarga" name="cara_mendapat_pekerjaan" value="Melalui keluarga/teman">
+                                <input type="checkbox" id="cara_keluarga" name="cara_mendapat_pekerjaan"
+                                    value="Melalui keluarga/teman">
                                 <label for="cara_keluarga">👥 Melalui keluarga/teman</label>
                             </div>
                             <div class="checkbox-option">
-                                <input type="checkbox" id="cara_jobfair" name="cara_mendapat_pekerjaan" value="Melalui job fair">
+                                <input type="checkbox" id="cara_jobfair" name="cara_mendapat_pekerjaan"
+                                    value="Melalui job fair">
                                 <label for="cara_jobfair">💼 Melalui job fair</label>
                             </div>
                             <div class="checkbox-option">
-                                <input type="checkbox" id="cara_sendiri" name="cara_mendapat_pekerjaan" value="Mencari sendiri">
+                                <input type="checkbox" id="cara_sendiri" name="cara_mendapat_pekerjaan"
+                                    value="Mencari sendiri">
                                 <label for="cara_sendiri">🔍 Mencari sendiri</label>
                             </div>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label>Seberapa mudah atau sulit menurut Anda dalam mendapatkan pekerjaan pertama? <span class="required">*</span></label>
+                        <label>Seberapa mudah atau sulit menurut Anda dalam mendapatkan pekerjaan pertama? <span
+                                class="required">*</span></label>
                         <div class="radio-group">
                             <div class="radio-option">
                                 <input type="radio" id="kemudahan_mudah" name="kemudahan_cari_kerja" value="Mudah">
@@ -109,7 +178,8 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label>Apakah pihak sekolah membantu Anda dalam proses mendapatkan pekerjaan? <span class="required">*</span></label>
+                        <label>Apakah pihak sekolah membantu Anda dalam proses mendapatkan pekerjaan? <span
+                                class="required">*</span></label>
                         <div class="radio-group">
                             <div class="radio-option">
                                 <input type="radio" id="bantuan_ya" name="bantuan_sekolah" value="Ya">
@@ -122,7 +192,8 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label>Apakah pekerjaan pertama Anda sesuai dengan minat dan keterampilan yang Anda pelajari di SMK? <span class="required">*</span></label>
+                        <label>Apakah pekerjaan pertama Anda sesuai dengan minat dan keterampilan yang Anda pelajari di
+                            SMK? <span class="required">*</span></label>
                         <div class="radio-group">
                             <div class="radio-option">
                                 <input type="radio" id="minat_sesuai" name="kesesuaian_minat" value="Sesuai">
@@ -135,17 +206,20 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="waktu_kerja_pertama">Berapa lama waktu yang Anda butuhkan untuk mendapatkan pekerjaan pertama setelah lulus? <span class="required">*</span></label>
+                        <label for="waktu_kerja_pertama">Berapa lama waktu yang Anda butuhkan untuk mendapatkan
+                            pekerjaan pertama setelah lulus? <span class="required">*</span></label>
                         <select id="waktu_kerja_pertama" name="waktu_kerja_pertama">
                             <option value="">-- Pilih Durasi --</option>
-                            <option value="< 3 bulan">< 3 bulan</option>
+                            <option value="< 3 bulan">
+                                < 3 bulan</option>
                             <option value="3–6 bulan">3–6 bulan</option>
                             <option value="6–12 bulan">6–12 bulan</option>
                             <option value="1 tahun">1 tahun atau lebih</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="jenis_perusahaan">Jenis perusahaan tempat Anda bekerja sekarang? <span class="required">*</span></label>
+                        <label for="jenis_perusahaan">Jenis perusahaan tempat Anda bekerja sekarang? <span
+                                class="required">*</span></label>
                         <select id="jenis_perusahaan" name="jenis_perusahaan">
                             <option value="">-- Pilih Jenis Perusahaan --</option>
                             <option value="BUMN">BUMN</option>
@@ -155,7 +229,8 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Apakah pekerjaan Anda sekarang sesuai dengan jurusan SMK? <span class="required">*</span></label>
+                        <label>Apakah pekerjaan Anda sekarang sesuai dengan jurusan SMK? <span
+                                class="required">*</span></label>
                         <div class="radio-group">
                             <div class="radio-option">
                                 <input type="radio" id="jurusan_ya" name="kesesuaian_jurusan" value="Ya">
@@ -168,7 +243,8 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="kepuasan">Seberapa puas Anda dengan pekerjaan saat ini? <span class="required">*</span></label>
+                        <label for="kepuasan">Seberapa puas Anda dengan pekerjaan saat ini? <span
+                                class="required">*</span></label>
                         <select id="kepuasan" name="kepuasan">
                             <option value="">-- Pilih Tingkat Kepuasan --</option>
                             <option value="Tidak puas">😞 Tidak puas</option>
@@ -176,7 +252,8 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Apakah Anda berencana untuk pindah kerja ke bidang yang lebih sesuai dengan jurusan Anda? <span class="required">*</span></label>
+                        <label>Apakah Anda berencana untuk pindah kerja ke bidang yang lebih sesuai dengan jurusan Anda?
+                            <span class="required">*</span></label>
                         <div class="radio-group">
                             <div class="radio-option">
                                 <input type="radio" id="pindah_ya" name="rencana_pindah_kerja" value="Ya">
@@ -189,8 +266,10 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="lama_kerja">Sudah berapa lama Anda menjalani pekerjaan ini? <span class="required">*</span></label>
-                        <input type="number" id="lama_kerja" name="lama_kerja" min="0" step="0.5" placeholder="Dalam tahun (contoh: 1.5)">
+                        <label for="lama_kerja">Sudah berapa lama Anda menjalani pekerjaan ini? <span
+                                class="required">*</span></label>
+                        <input type="number" id="lama_kerja" name="lama_kerja" min="0" step="0.5"
+                            placeholder="Dalam tahun (contoh: 1.5)">
                         <div class="hint">Masukkan dalam satuan tahun (contoh: 2 atau 1.5)</div>
                     </div>
                     <div class="form-group">
@@ -221,7 +300,8 @@
                 <div class="section">
                     <h2>🎓 Section 3 - Untuk Yang Belum Bekerja</h2>
                     <div class="form-group">
-                        <label for="alasan_belum_kerja">Apa alasan utama Anda belum bekerja? <span class="required">*</span></label>
+                        <label for="alasan_belum_kerja">Apa alasan utama Anda belum bekerja? <span
+                                class="required">*</span></label>
                         <select id="alasan_belum_kerja" name="alasan_belum_kerja">
                             <option value="">-- Pilih Alasan --</option>
                             <option value="Sedang mencari pekerjaan">🔍 Sedang mencari pekerjaan</option>
@@ -229,20 +309,24 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Seberapa mudah atau sulit menurut Anda dalam mendapatkan pekerjaan pertama? <span class="required">*</span></label>
+                        <label>Seberapa mudah atau sulit menurut Anda dalam mendapatkan pekerjaan pertama? <span
+                                class="required">*</span></label>
                         <div class="radio-group">
                             <div class="radio-option">
-                                <input type="radio" id="kemudahan_mudah_2" name="kemudahan_cari_kerja_belum" value="Mudah">
+                                <input type="radio" id="kemudahan_mudah_2" name="kemudahan_cari_kerja_belum"
+                                    value="Mudah">
                                 <label for="kemudahan_mudah_2">😊 Mudah</label>
                             </div>
                             <div class="radio-option">
-                                <input type="radio" id="kemudahan_sulit_2" name="kemudahan_cari_kerja_belum" value="Sulit">
+                                <input type="radio" id="kemudahan_sulit_2" name="kemudahan_cari_kerja_belum"
+                                    value="Sulit">
                                 <label for="kemudahan_sulit_2">😰 Sulit</label>
                             </div>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label>Apakah pihak sekolah membantu Anda dalam proses mendapatkan pekerjaan? <span class="required">*</span></label>
+                        <label>Apakah pihak sekolah membantu Anda dalam proses mendapatkan pekerjaan? <span
+                                class="required">*</span></label>
                         <div class="radio-group">
                             <div class="radio-option">
                                 <input type="radio" id="bantuan_ya_2" name="bantuan_sekolah_belum" value="Ya">
@@ -255,29 +339,34 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label>Apakah Anda berencana untuk bekerja di bidang sesuai jurusan SMK? <span class="required">*</span></label>
+                        <label>Apakah Anda berencana untuk bekerja di bidang sesuai jurusan SMK? <span
+                                class="required">*</span></label>
                         <div class="radio-group">
                             <div class="radio-option">
                                 <input type="radio" id="rencana_ya" name="rencana_kerja_sesuai_jurusan" value="Ya">
                                 <label for="rencana_ya">✅ Ya</label>
                             </div>
                             <div class="radio-option">
-                                <input type="radio" id="rencana_tidak" name="rencana_kerja_sesuai_jurusan" value="Tidak">
+                                <input type="radio" id="rencana_tidak" name="rencana_kerja_sesuai_jurusan"
+                                    value="Tidak">
                                 <label for="rencana_tidak">❌ Tidak</label>
                             </div>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="kendala_utama">Apa kendala utama Anda dalam mencari pekerjaan? <span class="required">*</span></label>
+                        <label for="kendala_utama">Apa kendala utama Anda dalam mencari pekerjaan? <span
+                                class="required">*</span></label>
                         <select id="kendala_utama" name="kendala_utama">
                             <option value="">-- Pilih Kendala --</option>
                             <option value="Kurangnya lowongan yang sesuai">📄 Kurangnya lowongan yang sesuai</option>
                             <option value="Kurangnya pengalaman kerja">🏢 Kurangnya pengalaman kerja</option>
-                            <option value="Kurangnya keterampilan yang dibutuhkan">📚 Kurangnya keterampilan yang dibutuhkan</option>
+                            <option value="Kurangnya keterampilan yang dibutuhkan">📚 Kurangnya keterampilan yang
+                                dibutuhkan</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Apakah Anda sudah pernah mengikuti pelatihan atau kursus tambahan setelah lulus? <span class="required">*</span></label>
+                        <label>Apakah Anda sudah pernah mengikuti pelatihan atau kursus tambahan setelah lulus? <span
+                                class="required">*</span></label>
                         <div class="radio-group">
                             <div class="radio-option">
                                 <input type="radio" id="pelatihan_ya" name="ikut_pelatihan" value="Ya">
@@ -290,7 +379,8 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label>Apakah Anda menggunakan platform online (LinkedIn, Jobstreet, dll.) untuk mencari pekerjaan? <span class="required">*</span></label>
+                        <label>Apakah Anda menggunakan platform online (LinkedIn, Jobstreet, dll.) untuk mencari
+                            pekerjaan? <span class="required">*</span></label>
                         <div class="radio-group">
                             <div class="radio-option">
                                 <input type="radio" id="platform_ya" name="gunakan_platform_online" value="Ya">
@@ -303,10 +393,12 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label>Seberapa yakin Anda dengan keterampilan yang dimiliki untuk bersaing di dunia kerja? <span class="required">*</span></label>
+                        <label>Seberapa yakin Anda dengan keterampilan yang dimiliki untuk bersaing di dunia kerja?
+                            <span class="required">*</span></label>
                         <div class="radio-group">
                             <div class="radio-option">
-                                <input type="radio" id="yakin_tidak" name="kepercayaan_keterampilan" value="Tidak yakin">
+                                <input type="radio" id="yakin_tidak" name="kepercayaan_keterampilan"
+                                    value="Tidak yakin">
                                 <label for="yakin_tidak">😕 Tidak yakin</label>
                             </div>
                             <div class="radio-option">
@@ -316,21 +408,27 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label>Apakah Anda bersedia jika sekolah membantu memberikan rekomendasi pekerjaan sesuai minat dan keterampilan Anda? <span class="required">*</span></label>
+                        <label>Apakah Anda bersedia jika sekolah membantu memberikan rekomendasi pekerjaan sesuai minat
+                            dan keterampilan Anda? <span class="required">*</span></label>
                         <div class="radio-group">
                             <div class="radio-option">
                                 <input type="radio" id="rekomendasi_ya" name="bersedia_rekomendasi_sekolah" value="Ya">
                                 <label for="rekomendasi_ya">✅ Ya, saya bersedia</label>
                             </div>
                             <div class="radio-option">
-                                <input type="radio" id="rekomendasi_tidak" name="bersedia_rekomendasi_sekolah" value="Tidak">
+                                <input type="radio" id="rekomendasi_tidak" name="bersedia_rekomendasi_sekolah"
+                                    value="Tidak">
                                 <label for="rekomendasi_tidak">❌ Tidak perlu</label>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <button type="submit" class="submit-btn">📤 Submit Survey</button>
+            <button type="submit" class="submit-btn" id="submitBtn"><span class="btn-text">📤 Submit
+                    Survey</span></button>
+            <!-- reset form -->
+            <button type="reset" class="warning-btn" id="resetBtn"><span class="btn-text">🔄 Reset
+                    Survey</span></button>
             <div class="nav-links">
                 <a href="/metrics" class="btn-info">📊 Model Metrics</a>
                 <a href="/visualize" class="btn-info">📈 Visualizations</a>
@@ -339,16 +437,139 @@
         </form>
     </div>
     <script>
-const radio = document.getElementsByName('status_bekerja');
-const sec2 = document.getElementById('section_sudah_bekerja');
-const sec3 = document.getElementById('section_belum_bekerja');
-radio.forEach(r => { r.addEventListener('change', function() {
-if (this.value === 'Ya') {
-sec2.classList.add('active'); sec3.classList.remove('active');
-} else {
-sec2.classList.remove('active'); sec3.classList.add('active');
-}
-}); });
+        // Section toggle + progress update
+        const radio = document.getElementsByName('status_bekerja');
+        const sec2 = document.getElementById('section_sudah_bekerja');
+        const sec3 = document.getElementById('section_belum_bekerja');
+        const progressBar = document.getElementById('progressBar');
+        const form = document.getElementById('surveyForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const formStatus = document.getElementById('form-status');
+
+        function updateProgress() {
+            // Step 1 = basic info, Step 2 = additional section
+            const anySelected = Array.from(radio).some(r => r.checked);
+            progressBar.style.width = anySelected ? '100%' : '50%';
+        }
+
+        radio.forEach(r => {
+            r.addEventListener('change', function () {
+                if (this.value === 'Ya') {
+                    sec2.classList.add('active');
+                    sec3.classList.remove('active');
+                } else {
+                    sec2.classList.remove('active');
+                    sec3.classList.add('active');
+                }
+                updateProgress();
+            });
+        });
+
+        // LocalStorage autosave/restore
+        const STORAGE_KEY = 'jrs_survey_autosave_v1';
+
+        function serializeForm() {
+            const data = {};
+            const checkGroups = {};
+            Array.from(form.elements).forEach(el => {
+                if (!el.name) return;
+                if (el.type === 'checkbox') {
+                    if (!checkGroups[el.name]) checkGroups[el.name] = [];
+                    if (el.checked) checkGroups[el.name].push(el.value);
+                } else if (el.type === 'radio') {
+                    if (el.checked) data[el.name] = el.value;
+                } else {
+                    data[el.name] = el.value;
+                }
+            });
+            return { ...data, ...checkGroups };
+        }
+
+        function restoreForm() {
+            try {
+                const raw = localStorage.getItem(STORAGE_KEY);
+                if (!raw) return;
+                const saved = JSON.parse(raw);
+                Array.from(form.elements).forEach(el => {
+                    if (!el.name) return;
+                    if (el.type === 'checkbox') {
+                        const arr = saved[el.name];
+                        if (Array.isArray(arr)) el.checked = arr.includes(el.value);
+                    } else if (el.type === 'radio') {
+                        if (saved[el.name] !== undefined) el.checked = (el.value === saved[el.name]);
+                    } else if (saved[el.name] !== undefined) {
+                        el.value = saved[el.name];
+                    }
+                });
+                // Reflect section visibility & progress
+                const bekerja = saved['status_bekerja'];
+                if (bekerja === 'Ya') { sec2.classList.add('active'); sec3.classList.remove('active'); }
+                else if (bekerja === 'Tidak') { sec2.classList.remove('active'); sec3.classList.add('active'); }
+                updateProgress();
+            } catch (e) { }
+        }
+
+        window.addEventListener('load', restoreForm);
+
+        form.addEventListener('input', () => {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(serializeForm()));
+        });
+
+        // Better validation messages
+        form.addEventListener('invalid', (e) => {
+            e.preventDefault();
+            const firstInvalid = form.querySelector(':invalid');
+            if (firstInvalid) {
+                firstInvalid.focus({ preventScroll: false });
+                formStatus.textContent = 'Beberapa isian belum valid. Mohon lengkapi yang bertanda *.';
+            }
+        }, true);
+
+        // Submit loading state
+        form.addEventListener('submit', (e) => {
+            const invalid = form.querySelector(':invalid');
+            if (invalid) return; // Let browser show validation
+            submitBtn.classList.add('loading');
+            submitBtn.innerHTML = '<span class="spinner"></span>Mengirim...';
+        });
+
+        // Input masks: phone and email sanitation
+        const phoneInput = document.getElementById('phone');
+        function formatPhone(value) {
+            let digits = (value || '').replace(/\D/g, '');
+            if (digits.startsWith('62')) digits = '0' + digits.slice(2);
+            if (digits.startsWith('8')) digits = '0' + digits;
+            const p1 = digits.slice(0, 4);
+            const p2 = digits.slice(4, 8);
+            const p3 = digits.slice(8, 12);
+            let out = p1;
+            if (p2) out += '-' + p2;
+            if (p3) out += '-' + p3;
+            return out;
+        }
+        if (phoneInput) {
+            phoneInput.addEventListener('input', (e) => {
+                const pos = e.target.selectionStart;
+                const formatted = formatPhone(e.target.value);
+                e.target.value = formatted;
+            });
+        }
+        const emailEl = document.getElementById('email');
+        if (emailEl) {
+            emailEl.addEventListener('input', () => {
+                emailEl.value = emailEl.value.replace(/\s+/g, '').toLowerCase();
+            });
+        }
+        //function reset form
+        const resetBtn = document.getElementById('resetBtn');
+        resetBtn.addEventListener('click', () => {
+            localStorage.removeItem(STORAGE_KEY);
+            sec2.classList.remove('active');
+            sec3.classList.remove('active');
+            progressBar.style.width = '0%';
+            formStatus.textContent = '';
+        });
     </script>
 </body>
+
 </html>
