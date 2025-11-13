@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>K-Means Clustering - Sistem Rekomendasi Karir</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/clustering.css') }}">
 </head>
+
 <body>
     <div class="container">
         <div class="header">
@@ -57,7 +59,8 @@
             <div class="cluster-visualization">
                 <h3>📈 Elbow Method - Optimal K Selection</h3>
                 <div class="cluster-chart">
-                    <img src="data:image/png;base64,{{ elbow_plot }}" alt="Elbow Method Plot" style="max-width: 100%; height: auto; border-radius: 8px;">
+                    <img src="data:image/png;base64,{{ elbow_plot }}" alt="Elbow Method Plot"
+                        style="max-width: 100%; height: auto; border-radius: 8px;">
                 </div>
                 <p style="text-align: center; color: #666; margin-top: 10px; font-size: 14px;">
                     Elbow method menunjukkan optimal K={{ optimal_k }} berdasarkan inertia dan silhouette score
@@ -67,7 +70,8 @@
             <div class="cluster-visualization" style="margin-top: 40px;">
                 <h3>🔷 Cluster Scatter Plot - Data Segmentation</h3>
                 <div class="cluster-chart">
-                    <img src="data:image/png;base64,{{ cluster_plot }}" alt="Cluster Scatter Plot" style="max-width: 100%; height: auto; border-radius: 8px;">
+                    <img src="data:image/png;base64,{{ cluster_plot }}" alt="Cluster Scatter Plot"
+                        style="max-width: 100%; height: auto; border-radius: 8px;">
                 </div>
                 <p style="text-align: center; color: #666; margin-top: 10px; font-size: 14px;">
                     Visualisasi {{ optimal_k }} cluster berdasarkan Gaji dan Lama Kerja (scaled features)
@@ -101,13 +105,16 @@
                         </div>
                     </div>
                     <div class="insights">
-                        K-Means clustering mensegmentasi alumni menjadi {{ optimal_k }} grup berbeda berdasarkan gaji, lama kerja, dan waktu mendapat pekerjaan pertama. Metode unsupervised learning ini mengungkap pola alami dalam data untuk memberikan rekomendasi karir yang lebih personal dan targeted.
+                        K-Means clustering mensegmentasi alumni menjadi {{ optimal_k }} grup berbeda berdasarkan gaji,
+                        lama kerja, dan waktu mendapat pekerjaan pertama. Metode unsupervised learning ini mengungkap
+                        pola alami dalam data untuk memberikan rekomendasi karir yang lebih personal dan targeted.
                     </div>
                 </div>
             </div>
 
             <div class="cluster-grid" style="margin-top: 30px;">
-                <div class="cluster-card" style="background: linear-gradient(135deg, #dcfce7 0%, #f0fdf4 100%); border-left-color: #10b981;">
+                <div class="cluster-card"
+                    style="background: linear-gradient(135deg, #dcfce7 0%, #f0fdf4 100%); border-left-color: #10b981;">
                     <div class="cluster-name">🟢 Cluster 0 - Mid-Level Workers</div>
                     <div class="cluster-size">~30% Alumni (680 orang)</div>
                     <div class="characteristics">
@@ -119,11 +126,13 @@
                         </div>
                     </div>
                     <div class="insights">
-                        Alumni dengan gaji menengah dan pengalaman moderat. Biasanya butuh waktu lebih lama untuk mendapat pekerjaan pertama tapi memiliki career growth yang stabil.
+                        Alumni dengan gaji menengah dan pengalaman moderat. Biasanya butuh waktu lebih lama untuk
+                        mendapat pekerjaan pertama tapi memiliki career growth yang stabil.
                     </div>
                 </div>
 
-                <div class="cluster-card" style="background: linear-gradient(135deg, #dbeafe 0%, #eff6ff 100%); border-left-color: #3b82f6;">
+                <div class="cluster-card"
+                    style="background: linear-gradient(135deg, #dbeafe 0%, #eff6ff 100%); border-left-color: #3b82f6;">
                     <div class="cluster-name">🔵 Cluster 1 - High Performers</div>
                     <div class="cluster-size">~38% Alumni (865 orang)</div>
                     <div class="characteristics">
@@ -135,11 +144,13 @@
                         </div>
                     </div>
                     <div class="insights">
-                        Alumni dengan kinerja tinggi! Mendapat pekerjaan cepat dengan gaji tertinggi. Pengalaman kerja paling lama dengan career progression yang sangat baik.
+                        Alumni dengan kinerja tinggi! Mendapat pekerjaan cepat dengan gaji tertinggi. Pengalaman kerja
+                        paling lama dengan career progression yang sangat baik.
                     </div>
                 </div>
 
-                <div class="cluster-card" style="background: linear-gradient(135deg, #fef3c7 0%, #fef9e7 100%); border-left-color: #f59e0b;">
+                <div class="cluster-card"
+                    style="background: linear-gradient(135deg, #fef3c7 0%, #fef9e7 100%); border-left-color: #f59e0b;">
                     <div class="cluster-name">🟡 Cluster 2 - Entry Level</div>
                     <div class="cluster-size">~33% Alumni (758 orang)</div>
                     <div class="characteristics">
@@ -151,7 +162,8 @@
                         </div>
                     </div>
                     <div class="insights">
-                        Alumni fresh graduate atau early career. Mendapat pekerjaan dengan cepat tapi dengan gaji entry-level. Memiliki potensi growth yang besar.
+                        Alumni fresh graduate atau early career. Mendapat pekerjaan dengan cepat tapi dengan gaji
+                        entry-level. Memiliki potensi growth yang besar.
                     </div>
                 </div>
             </div>
@@ -165,4 +177,5 @@
         </div>
     </div>
 </body>
+
 </html>

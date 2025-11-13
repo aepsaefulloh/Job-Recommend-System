@@ -499,6 +499,69 @@ Untuk roadmap pengembangan lengkap dan improvement checklist, lihat: **`IMPROVEM
 
 ---
 
+## 🎨 Design System (v2.3 - Modern Neutral Theme)
+
+### Color Palette
+**Primary Colors:**
+- Primary Blue: `#3b82f6` (Blue 500)
+- Secondary Blue: `#2563eb` (Blue 600)
+
+**Neutral Palette:**
+- Background: `#f8fafc` → `#e2e8f0` (Gradient)
+- Text Primary: `#1e293b` (Slate 800)
+- Text Secondary: `#475569` (Slate 600)
+- Text Muted: `#64748b` (Slate 500)
+- Borders: `#e2e8f0` (Slate 200)
+
+**Accent Colors:**
+- Success: `#10b981` (Emerald 500)
+- Warning: `#f59e0b` (Amber 500)
+- Error: `#ef4444` (Red 500)
+- Info: `#3b82f6` (Blue 500)
+
+### Typography
+- Font Family: `'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif`
+- Headings: 700 weight, Slate 800
+- Body: 500 weight, Slate 600
+- Small Text: 500 weight, Slate 500
+
+### Components
+
+**Cards:**
+- Background: White with soft gradient
+- Border: 1px solid Slate 200
+- Border Radius: 12px
+- Shadow: `0 2px 8px rgba(0,0,0,0.04)`
+- Hover: `0 4px 16px rgba(59,130,246,0.08)` + translateY(-2px)
+
+**Buttons:**
+- Primary: Blue gradient (#3b82f6 → #2563eb)
+- Secondary: Slate 100 background, Slate 600 text
+- Padding: 12-16px vertical, 24-32px horizontal
+- Border Radius: 8-10px
+- Shadow: Soft 0 2px 8px
+
+**Form Inputs:**
+- Border: 1.5px solid Slate 300
+- Focus: Blue 500 border + soft shadow
+- Padding: 12-14px
+- Border Radius: 8px
+
+**Data Cards:**
+- Gradient backgrounds (50 → 100 shades)
+- Border-left accent (4px solid primary)
+- Subtle shadows
+- Smooth transitions (0.2s ease)
+
+### Design Principles
+1. **Soft & Professional**: Tidak mencolok, nyaman di mata
+2. **Clear Hierarchy**: Visual hierarchy yang jelas
+3. **Consistent Spacing**: 16px base unit
+4. **Subtle Shadows**: Depth tanpa terlalu 3D
+5. **Smooth Transitions**: 0.2s ease untuk interaksi
+
+---
+
 ## 📚 Dependencies
 
 ### Python Packages (requirements.txt)
@@ -548,7 +611,27 @@ Untuk roadmap pengembangan lengkap dan improvement checklist, lihat: **`IMPROVEM
 
 ## 🔄 Version History
 
-### v2.2 (November 13, 2025) - Current ⭐
+### v2.3 (November 14, 2025) - Current ⭐
+**UX/UI Enhancement - Modern Neutral Theme:**
+- Complete redesign with soft neutral color palette
+- Color Scheme: Emerald green → Modern blue-gray (#3b82f6, #1e293b, #f8fafc)
+- Improved data presentation with better card layouts
+- Enhanced visual hierarchy and readability
+- Softer shadows and transitions (0.2s ease)
+- Documented comprehensive design system
+- Unified design across all pages (index, metrics, visualize, clustering, result)
+- Better contrast and accessibility
+- Professional and not too flashy appearance
+
+**Files Modified:**
+- `static/css/index.css`: Soft neutral backgrounds, blue accents
+- `static/css/metrics.css`: Modern card gradients, better stat cards
+- `static/css/visualize.css`: Enhanced chart containers, soft insight cards
+- `static/css/clustering.css`: Refined cluster cards, soft tags
+- `templates/result.html`: Tailwind config with neutral palette
+- `PROJECT_NOTES.md`: Added Design System documentation
+
+### v2.2 (November 13, 2025)
 **Major Model Improvements:**
 - Dataset: 198 → **2,303 samples** (+1,062%)
 - Jurusan accuracy: 17.57% → **50.76%** (+188% improvement!)

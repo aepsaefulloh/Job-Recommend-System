@@ -8,8 +8,8 @@
 }
 
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
     padding: 20px;
     min-height: 100vh;
 }
@@ -19,28 +19,29 @@ body {
     margin: 0 auto;
     background: white;
     padding: 40px;
-    border-radius: 15px;
-    box-shadow: 0 10px 40px rgba(16, 185, 129, 0.3);
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.02);
     margin-bottom: 40px;
 }
 
 .header {
     text-align: center;
     margin-bottom: 40px;
-    border-bottom: 3px solid #10b981;
+    border-bottom: 2px solid #e2e8f0;
     padding-bottom: 20px;
 }
 
 .header h1 {
-    color: #10b981;
+    color: #1e293b;
     font-size: 28px;
     margin-bottom: 10px;
+    font-weight: 700;
 }
 
 .header .subtitle {
-    color: #059669;
+    color: #475569;
     font-size: 16px;
-    font-weight: 600;
+    font-weight: 500;
     margin-bottom: 10px;
 }
 
@@ -51,21 +52,22 @@ body {
 }
 
 .clustering-controls {
-    background: #f8f9fa;
-    padding: 30px;
+    background: #f8fafc;
+    padding: 32px;
     border-radius: 12px;
     margin-bottom: 40px;
-    border-left: 5px solid #10b981;
+    border: 1px solid #e2e8f0;
+    border-left: 4px solid #3b82f6;
 }
 
 .clustering-controls h2 {
-    color: #10b981;
+    color: #1e293b;
     font-size: 20px;
     margin-bottom: 25px;
     padding-bottom: 12px;
-    border-bottom: 2px solid #10b981;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+    border-bottom: 2px solid #e2e8f0;
+    font-weight: 600;
+    letter-spacing: 0.3px;
 }
 
 .controls-grid {
@@ -88,18 +90,19 @@ body {
 
 .control-group select,
 .control-group input[type="number"] {
-    padding: 10px 12px;
-    border: 2px solid #e0e0e0;
+    padding: 12px 14px;
+    border: 1.5px solid #cbd5e1;
     border-radius: 8px;
     font-size: 14px;
-    transition: all 0.3s;
+    transition: all 0.2s ease;
+    background: white;
 }
 
 .control-group select:focus,
 .control-group input[type="number"]:focus {
     outline: none;
-    border-color: #10b981;
-    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.08);
 }
 
 .control-group select {
@@ -136,13 +139,13 @@ body {
 }
 
 .results-section h2 {
-    color: #10b981;
+    color: #1e293b;
     font-size: 22px;
-    margin-bottom: 25px;
+    margin-bottom: 30px;
     padding-bottom: 12px;
-    border-bottom: 2px solid #10b981;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+    border-bottom: 2px solid #e2e8f0;
+    font-weight: 600;
+    letter-spacing: 0.3px;
 }
 
 .cluster-stats {
@@ -153,53 +156,60 @@ body {
 }
 
 .stat-card {
-    background: #f8f9fa;
-    padding: 25px;
+    background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+    padding: 28px;
     border-radius: 12px;
-    border-left: 5px solid #10b981;
-    transition: all 0.3s;
+    border: 1px solid #e2e8f0;
+    border-left: 4px solid #3b82f6;
+    transition: all 0.2s ease;
 }
 
 .stat-card:hover {
     transform: translateY(-3px);
-    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.15);
+    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.12);
+    border-left-color: #2563eb;
 }
 
 .stat-card h3 {
-    color: #10b981;
-    font-size: 18px;
+    color: #475569;
+    font-size: 14px;
     margin-bottom: 15px;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.8px;
+    font-weight: 600;
 }
 
 .stat-card .stat-value {
-    font-size: 32px;
-    font-weight: bold;
-    color: #059669;
+    font-size: 36px;
+    font-weight: 700;
+    color: #1e293b;
     margin-bottom: 10px;
 }
 
 .stat-card .stat-description {
-    color: #666;
+    color: #64748b;
     font-size: 14px;
     line-height: 1.5;
+    font-weight: 500;
 }
 
 .cluster-visualization {
-    background: white;
-    padding: 30px;
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    padding: 32px;
     border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.05);
     margin-bottom: 40px;
-    border: 1px solid #e0e0e0;
+    border: 1px solid #e2e8f0;
 }
 
 .cluster-visualization h3 {
-    color: #10b981;
+    color: #1e293b;
     font-size: 18px;
     margin-bottom: 20px;
-    text-align: center;
+    text-align: left;
+    font-weight: 600;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #e2e8f0;
 }
 
 .cluster-chart {
@@ -221,20 +231,21 @@ body {
 }
 
 .cluster-details {
-    background: #f8f9fa;
-    padding: 30px;
+    background: #f8fafc;
+    padding: 32px;
     border-radius: 12px;
-    border-left: 5px solid #10b981;
+    border: 1px solid #e2e8f0;
+    border-left: 4px solid #3b82f6;
 }
 
 .cluster-details h2 {
-    color: #10b981;
+    color: #1e293b;
     font-size: 22px;
     margin-bottom: 25px;
     padding-bottom: 12px;
-    border-bottom: 2px solid #10b981;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+    border-bottom: 2px solid #e2e8f0;
+    font-weight: 600;
+    letter-spacing: 0.3px;
 }
 
 .cluster-grid {
@@ -245,29 +256,29 @@ body {
 
 .cluster-card {
     background: white;
-    padding: 25px;
-    border-radius: 10px;
-    border: 1px solid #e0e0e0;
-    transition: all 0.3s;
+    padding: 28px;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    transition: all 0.2s ease;
 }
 
 .cluster-card:hover {
     transform: translateY(-3px);
-    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.15);
+    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.12);
 }
 
 .cluster-card .cluster-name {
     font-size: 18px;
-    font-weight: bold;
-    color: #10b981;
+    font-weight: 700;
+    color: #1e293b;
     margin-bottom: 15px;
 }
 
 .cluster-card .cluster-size {
-    color: #059669;
+    color: #3b82f6;
     font-weight: 600;
     margin-bottom: 15px;
-    font-size: 16px;
+    font-size: 15px;
 }
 
 .cluster-card .characteristics {
@@ -288,13 +299,13 @@ body {
 }
 
 .characteristic-tag {
-    background: #f0fdf4;
-    color: #059669;
-    padding: 4px 10px;
-    border-radius: 15px;
+    background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+    color: #1e40af;
+    padding: 6px 12px;
+    border-radius: 6px;
     font-size: 12px;
-    font-weight: 500;
-    border: 1px solid #10b981;
+    font-weight: 600;
+    border: 1px solid #bfdbfe;
 }
 
 .cluster-card .top-skills {
@@ -303,7 +314,7 @@ body {
 
 .cluster-card .skills-title {
     font-weight: 600;
-    color: #333;
+    color: #475569;
     margin-bottom: 10px;
     font-size: 14px;
 }
@@ -315,19 +326,19 @@ body {
 }
 
 .skill-tag {
-    background: #e0f2fe;
-    color: #0ea5e9;
-    padding: 4px 10px;
-    border-radius: 15px;
+    background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+    color: #475569;
+    padding: 6px 12px;
+    border-radius: 6px;
     font-size: 12px;
-    font-weight: 500;
-    border: 1px solid #0ea5e9;
+    font-weight: 600;
+    border: 1px solid #cbd5e1;
 }
 
 .cluster-card .insights {
-    color: #666;
-    line-height: 1.6;
-    font-size: 14px;
+    color: #64748b;
+    line-height: 1.7;
+    font-size: 13px;
 }
 
 .nav-links {
@@ -349,23 +360,24 @@ body {
 }
 
 .nav-links .btn-primary {
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
     color: white;
 }
 
 .nav-links .btn-secondary {
-    background: #e0e0e0;
-    color: #333;
+    background: #f1f5f9;
+    color: #475569;
+    border: 1px solid #e2e8f0;
 }
 
 .nav-links .btn-info {
-    background: #0ea5e9;
+    background: #3b82f6;
     color: white;
 }
 
 .nav-links a:hover {
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
 /* Loading Animation */
