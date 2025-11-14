@@ -58,7 +58,8 @@ def result():
                              tempat_tinggal=processed_data['tempat_tinggal'],
                              status_bekerja=processed_data['status_bekerja'],
                              jurusan_cocok=predictions['jurusan_cocok'],
-                             perusahaan_tepat=predictions['perusahaan_tepat'])
+                             perusahaan_tepat=predictions['perusahaan_tepat'],
+                             recommended_jobs=predictions['recommended_jobs'])
     
     except Exception as e:
         import traceback
@@ -121,24 +122,24 @@ def visualize():
     
     except Exception as e:
         return f"Error generating visualizations: {str(e)}", 500
-@app.route('/clustering')
-def clustering():
-    """Display K-Means clustering visualizations (Unsupervised Learning)"""
-    if clustering_data is None:
-        return "Clustering data not available. Please run preprocessing.py first.", 500
-    
-    try:
-        # Generate clustering visualizations using helper functions
-        elbow_plot = generate_elbow_curve(clustering_data)
-        cluster_plot = generate_cluster_scatter(clustering_data)
-        
-        return render_template('clustering.html',
-                             elbow_plot=elbow_plot,
-                             cluster_plot=cluster_plot,
-                             optimal_k=clustering_data.get('optimal_k', 3))
-    
-    except Exception as e:
-        return f"Error generating clustering visualizations: {str(e)}", 500
+# @app.route('/clustering')
+# def clustering():
+#     """Display K-Means clustering visualizations (Unsupervised Learning)"""
+#     if clustering_data is None:
+#         return "Clustering data not available. Please run preprocessing.py first.", 500
+#     
+#     try:
+#         # Generate clustering visualizations using helper functions
+#         elbow_plot = generate_elbow_curve(clustering_data)
+#         cluster_plot = generate_cluster_scatter(clustering_data)
+#         
+#         return render_template('clustering.html',
+#                              elbow_plot=elbow_plot,
+#                              cluster_plot=cluster_plot,
+#                              optimal_k=clustering_data.get('optimal_k', 3))
+#     
+#     except Exception as e:
+#         return f"Error generating clustering visualizations: {str(e)}", 500
 
 if __name__ == '__main__':
     print("\n" + "="*50)
@@ -149,8 +150,7 @@ if __name__ == '__main__':
     print("Routes available:")
     print("  - http://127.0.0.1:5000/ (Home - Prediction Form)")
     print("  - http://127.0.0.1:5000/metrics (Model Performance)")
-    print("  - http://127.0.0.1:5000/visualize (Supervised Learning Visualizations)")
-    print("  - http://127.0.0.1:5000/clustering (Unsupervised Learning - K-Means)")
+    print("  - http://127.0.0.1:5000/visualize (Data Visualizations)")
     print("="*50 + "\n")
     
     app.run(debug=True, host='0.0.0.0', port=5000)

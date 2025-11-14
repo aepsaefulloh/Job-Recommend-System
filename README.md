@@ -50,11 +50,15 @@ Sistem rekomendasi pekerjaan berbasis machine learning untuk alumni universitas.
   - Box plot Pengalaman Kerja
   - Top 10 Jurusan
   - Pie chart Kepuasan
-  
-- **Clustering K-Means**: Alumni dikelompokkan menjadi 3 cluster
-  - Cluster 0: High Performers Junior (46.7%)
-  - Cluster 1: Senior Stars (16.7%)
-  - Cluster 2: Developing Professionals (36.7%)
+
+---
+
+## ⚠️ **Fitur yang Dinonaktifkan**
+
+**K-Means Clustering** ❌ **DISABLED** (November 14, 2025)
+- Fitur clustering telah dinonaktifkan untuk fokus pada supervised learning (KNN)
+- Alasan: Menyederhanakan scope skripsi dan menghindari pertanyaan tambahan saat sidang
+- File clustering masih tersedia di `templates/clustering.html` namun route dinonaktifkan
 
 ---
 
@@ -135,8 +139,7 @@ Open browser and go to: http://127.0.0.1:5000
 Routes available:
   - http://127.0.0.1:5000/ (Home - Prediction Form)
   - http://127.0.0.1:5000/metrics (Model Performance)
-  - http://127.0.0.1:5000/visualize (Supervised Learning Visualizations)
-  - http://127.0.0.1:5000/clustering (Unsupervised Learning - K-Means)
+  - http://127.0.0.1:5000/visualize (Data Visualizations)
 ==================================================
 ```
 

@@ -194,6 +194,193 @@ def encode_features(processed_data, label_encoders):
     return features
 
 
+def get_job_recommendations(jurusan_cocok, perusahaan_tepat, tempat_tinggal):
+    """
+    Generate job recommendations based on predicted jurusan and company type
+    
+    Args:
+        jurusan_cocok: Predicted suitable major/field
+        perusahaan_tepat: Predicted company compatibility
+        tempat_tinggal: User's location
+        
+    Returns:
+        list: List of recommended jobs with details
+    """
+    # Job database mapped to jurusan categories
+    job_database = {
+        'Akuntansi & Keuangan': [
+            {
+                'title': 'Staff Accounting',
+                'company_type': 'Perusahaan Swasta',
+                'description': 'Mengelola pencatatan keuangan, membuat laporan keuangan, dan rekonsiliasi akun',
+                'salary_range': 'Rp 5.000.000 - Rp 8.000.000',
+                'requirements': ['Lulusan SMK Akuntansi', 'Menguasai Microsoft Excel', 'Teliti dan detail'],
+                'icon': '📊'
+            },
+            {
+                'title': 'Tax Consultant',
+                'company_type': 'Perusahaan Swasta',
+                'description': 'Memberikan konsultasi perpajakan dan membantu perusahaan dalam pelaporan pajak',
+                'salary_range': 'Rp 6.000.000 - Rp 10.000.000',
+                'requirements': ['Memahami perpajakan', 'Komunikasi baik', 'Analitis'],
+                'icon': '💼'
+            },
+            {
+                'title': 'Finance Staff',
+                'company_type': 'BUMN',
+                'description': 'Mengelola arus kas, membuat budget, dan analisis keuangan perusahaan',
+                'salary_range': 'Rp 5.500.000 - Rp 9.000.000',
+                'requirements': ['Menguasai akuntansi', 'Microsoft Excel Advanced', 'Teliti'],
+                'icon': '💰'
+            },
+            {
+                'title': 'Auditor',
+                'company_type': 'PNS',
+                'description': 'Melakukan audit internal, memeriksa laporan keuangan, dan memberikan rekomendasi',
+                'salary_range': 'Rp 5.000.000 - Rp 8.500.000',
+                'requirements': ['Integritas tinggi', 'Analytical thinking', 'Detail oriented'],
+                'icon': '🔍'
+            }
+        ],
+        'Administrasi Perkantoran': [
+            {
+                'title': 'Staff Administrasi',
+                'company_type': 'Perusahaan Swasta',
+                'description': 'Mengelola dokumen, arsip, dan mendukung operasional kantor sehari-hari',
+                'salary_range': 'Rp 4.500.000 - Rp 7.000.000',
+                'requirements': ['Menguasai MS Office', 'Organisasi baik', 'Komunikatif'],
+                'icon': '📋'
+            },
+            {
+                'title': 'Sekretaris',
+                'company_type': 'BUMN',
+                'description': 'Membantu pimpinan dalam mengatur jadwal, korespondensi, dan administrasi',
+                'salary_range': 'Rp 5.000.000 - Rp 8.500.000',
+                'requirements': ['Multitasking', 'Professional', 'Komunikasi excellent'],
+                'icon': '👔'
+            },
+            {
+                'title': 'Receptionist',
+                'company_type': 'Perusahaan Swasta',
+                'description': 'Menyambut tamu, menjawab telepon, dan mengelola administrasi front office',
+                'salary_range': 'Rp 4.000.000 - Rp 6.500.000',
+                'requirements': ['Ramah', 'Penampilan menarik', 'Komunikasi baik'],
+                'icon': '👋'
+            },
+            {
+                'title': 'Data Entry',
+                'company_type': 'Perusahaan Swasta',
+                'description': 'Input data, verifikasi data, dan maintain database perusahaan',
+                'salary_range': 'Rp 4.200.000 - Rp 6.000.000',
+                'requirements': ['Typing cepat', 'Teliti', 'Microsoft Excel'],
+                'icon': '⌨️'
+            }
+        ],
+        'Bisnis & Pemasaran': [
+            {
+                'title': 'Digital Marketing',
+                'company_type': 'Perusahaan Swasta',
+                'description': 'Mengelola social media, membuat konten marketing, dan analisis campaign digital',
+                'salary_range': 'Rp 5.000.000 - Rp 9.000.000',
+                'requirements': ['Kreatif', 'Menguasai social media', 'Copywriting'],
+                'icon': '📱'
+            },
+            {
+                'title': 'Sales Executive',
+                'company_type': 'Perusahaan Swasta',
+                'description': 'Mencari klien baru, presentasi produk, dan mencapai target penjualan',
+                'salary_range': 'Rp 4.500.000 - Rp 8.000.000 + Komisi',
+                'requirements': ['Persuasif', 'Target oriented', 'Networking'],
+                'icon': '🎯'
+            },
+            {
+                'title': 'Account Executive',
+                'company_type': 'BUMN',
+                'description': 'Mengelola hubungan dengan klien, memberikan solusi bisnis, dan maintain partnership',
+                'salary_range': 'Rp 6.000.000 - Rp 10.000.000',
+                'requirements': ['Relationship building', 'Negotiation', 'Presentation skill'],
+                'icon': '🤝'
+            },
+            {
+                'title': 'Brand Ambassador',
+                'company_type': 'Perusahaan Swasta',
+                'description': 'Mempromosikan brand, event activation, dan meningkatkan brand awareness',
+                'salary_range': 'Rp 4.000.000 - Rp 7.000.000',
+                'requirements': ['Komunikatif', 'Energik', 'Public speaking'],
+                'icon': '🌟'
+            }
+        ],
+        'Komunikasi & Media': [
+            {
+                'title': 'Content Creator',
+                'company_type': 'Perusahaan Swasta',
+                'description': 'Membuat konten untuk social media, website, dan platform digital lainnya',
+                'salary_range': 'Rp 5.000.000 - Rp 9.000.000',
+                'requirements': ['Kreatif', 'Video/photo editing', 'Storytelling'],
+                'icon': '🎬'
+            },
+            {
+                'title': 'Customer Service',
+                'company_type': 'BUMN',
+                'description': 'Melayani customer, menangani komplain, dan memberikan solusi',
+                'salary_range': 'Rp 4.500.000 - Rp 7.500.000',
+                'requirements': ['Sabar', 'Problem solving', 'Komunikasi excellent'],
+                'icon': '☎️'
+            }
+        ],
+        'Teknologi Informasi': [
+            {
+                'title': 'IT Support',
+                'company_type': 'Perusahaan Swasta',
+                'description': 'Maintenance komputer, troubleshooting, dan support teknis IT',
+                'salary_range': 'Rp 5.000.000 - Rp 8.000.000',
+                'requirements': ['Hardware/software knowledge', 'Problem solving', 'Technical skill'],
+                'icon': '💻'
+            },
+            {
+                'title': 'Web Developer',
+                'company_type': 'Perusahaan Swasta',
+                'description': 'Membuat dan maintain website menggunakan HTML, CSS, JavaScript',
+                'salary_range': 'Rp 6.000.000 - Rp 12.000.000',
+                'requirements': ['HTML/CSS/JS', 'Framework knowledge', 'Problem solving'],
+                'icon': '🌐'
+            }
+        ]
+    }
+    
+    # Default to general recommendations if jurusan not found
+    default_jobs = [
+        {
+            'title': 'Staff Administrasi',
+            'company_type': 'Perusahaan Swasta',
+            'description': 'Mengelola dokumen, arsip, dan mendukung operasional kantor',
+            'salary_range': 'Rp 4.500.000 - Rp 7.000.000',
+            'requirements': ['MS Office', 'Organisasi', 'Komunikasi'],
+            'icon': '📋'
+        }
+    ]
+    
+    # Get jobs for the predicted jurusan
+    jobs = job_database.get(jurusan_cocok, default_jobs)
+    
+    # Filter or prioritize by company type match
+    recommended_jobs = []
+    for job in jobs:
+        # Check if company type matches
+        match_score = 100 if job['company_type'] == perusahaan_tepat else 85
+        
+        job_copy = job.copy()
+        job_copy['match_score'] = match_score
+        job_copy['location'] = tempat_tinggal
+        recommended_jobs.append(job_copy)
+    
+    # Sort by match score (highest first)
+    recommended_jobs.sort(key=lambda x: x['match_score'], reverse=True)
+    
+    # Return top 4 recommendations
+    return recommended_jobs[:4]
+
+
 def make_predictions(form_data, models):
     """
     Make predictions based on form data
@@ -209,6 +396,7 @@ def make_predictions(form_data, models):
             - perusahaan_tepat: Predicted company compatibility
             - jurusan_proba: Prediction probabilities for major
             - perusahaan_proba: Prediction probabilities for company
+            - recommended_jobs: List of recommended jobs
     """
     # Extract models
     knn_jurusan = models['knn_jurusan']
@@ -237,11 +425,19 @@ def make_predictions(form_data, models):
     jurusan_cocok = label_encoders['jurusan_cocok'].inverse_transform([jurusan_pred_encoded])[0]
     perusahaan_tepat = label_encoders['perusahaan_tepat'].inverse_transform([perusahaan_pred_encoded])[0]
     
+    # Generate job recommendations
+    recommended_jobs = get_job_recommendations(
+        jurusan_cocok, 
+        perusahaan_tepat, 
+        processed_data['tempat_tinggal']
+    )
+    
     # Return results
     return {
         'processed_data': processed_data,
         'jurusan_cocok': jurusan_cocok,
         'perusahaan_tepat': perusahaan_tepat,
         'jurusan_proba': jurusan_proba,
-        'perusahaan_proba': perusahaan_proba
+        'perusahaan_proba': perusahaan_proba,
+        'recommended_jobs': recommended_jobs
     }

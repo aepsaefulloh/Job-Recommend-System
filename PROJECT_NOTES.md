@@ -70,7 +70,7 @@ job recommended system/
 
 ---
 
-## 🚀 Application Routes
+## 🚀 Application Routes (3 Active Routes)
 
 ### 1. **Home/Survey Page** (`/` - GET)
 - **File:** `templates/index.html`
@@ -87,11 +87,11 @@ job recommended system/
 - **CSS:** `static/css/metrics.css`
 - **Purpose:** Display model performance metrics
 - **Features:**
-  - Model Jurusan Accuracy: ~17.57%
-  - Model Perusahaan Accuracy: ~79.73%
-  - Algorithm: KNN (K=5)
-  - Dataset: 198 samples
-  - Confusion Matrix for Perusahaan model
+  - Model Jurusan Accuracy: ~50.76%
+  - Model Perusahaan Accuracy: ~72.89%
+  - Algorithm: KNN (K=11 & K=15)
+  - Dataset: 2,303 samples
+  - Confusion Matrix for both models
   - Improvement suggestions for Jurusan model
   - Model Information cards
 
@@ -100,37 +100,35 @@ job recommended system/
 - **CSS:** `static/css/visualize.css`
 - **Purpose:** Display 8 data visualization charts
 - **Charts:**
-  1. Scatter plot
-  2. Bar charts
-  3. Heatmaps
-  4. Pie chart
-  5. Distribution plots
-  6. Correlation matrix
-  7. Feature importance
-  8. Trend analysis
+  1. Scatter plot (Experience vs Salary)
+  2. Work time vs Satisfaction
+  3. Satisfaction by Company Type
+  4. Salary Distribution
+  5. Correlation Heatmap
+  6. Experience Box Plot
+  7. Top Jurusan Bar Chart
+  8. Satisfaction Pie Chart
 
-### 4. **Clustering Analysis** (`/clustering` - GET)
-- **File:** `templates/clustering.html`
-- **CSS:** `static/css/clustering.css`
-- **Purpose:** K-Means clustering analysis
-- **Features:**
-  - Algorithm: K-Means
-  - Optimal Clusters: 3
-  - Features Used: 3
-  - Dataset Size: 198
-  - Cluster interpretation cards
-  - Stat cards with emerald theme
-
-### 5. **Results Page** (`/result` - POST)
+### 4. **Results Page** (`/result` - POST)
 - **File:** `templates/result.html`
 - **CSS:** `static/css/result.css`
 - **Purpose:** Display job recommendations
 - **Features:**
   - User profile display
   - Job recommendation cards
-  - Similar jobs listing
-  - Match score badges
+  - Career recommendations
+  - Company type suggestions
 - **Note:** Requires POST request from survey form
+
+---
+
+## ⚠️ **DISABLED FEATURES** (For Thesis Scope)
+
+### ~~Clustering Analysis~~ (`/clustering` - DISABLED)
+- **Status:** ❌ **DISABLED (November 14, 2025)**
+- **Reason:** K-Means clustering removed from scope to avoid additional questions during thesis defense
+- **File:** Route commented out in `app.py`
+- **Note:** All navigation links to `/clustering` have been removed from templates
 
 ---
 
@@ -463,8 +461,8 @@ python app.py
 - Home: `http://127.0.0.1:5000/`
 - Metrics: `http://127.0.0.1:5000/metrics`
 - Visualizations: `http://127.0.0.1:5000/visualize`
-- Clustering: `http://127.0.0.1:5000/clustering`
 - Results: `http://127.0.0.1:5000/result` (POST only)
+- ~~Clustering: `http://127.0.0.1:5000/clustering`~~ ❌ **DISABLED**
 
 ### Testing with Playwright
 ```javascript
@@ -611,7 +609,24 @@ Untuk roadmap pengembangan lengkap dan improvement checklist, lihat: **`IMPROVEM
 
 ## 🔄 Version History
 
-### v2.3 (November 14, 2025) - Current ⭐
+### v2.4 (November 14, 2025) - Current ⭐
+**Thesis Scope Optimization:**
+- ❌ **Disabled K-Means Clustering feature** (`/clustering` route)
+- Removed all clustering navigation links from templates (index, metrics, visualize, result)
+- Simplified application to focus on KNN supervised learning only
+- Updated documentation to reflect active routes only
+- **Reason:** Avoid additional complexity and questions during thesis defense
+- **Routes Active:** 3 main routes (Home, Metrics, Visualize) + 1 POST route (Result)
+
+**Files Modified:**
+- `app.py`: Commented out `/clustering` route handler
+- `templates/index.html`: Removed clustering navigation link
+- `templates/metrics.html`: Removed clustering navigation link
+- `templates/visualize.html`: Removed clustering navigation link
+- `templates/result.html`: Removed clustering navigation link
+- `PROJECT_NOTES.md`: Updated documentation
+
+### v2.3 (November 14, 2025)
 **UX/UI Enhancement - Modern Neutral Theme:**
 - Complete redesign with soft neutral color palette
 - Color Scheme: Emerald green → Modern blue-gray (#3b82f6, #1e293b, #f8fafc)
