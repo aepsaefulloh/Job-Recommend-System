@@ -1,0 +1,79 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+
+# Virtual environments (do not ignore .env file)
+venv/
+ENV/
+env/
+.venv/
+venv.bak/
+
+# Pytest and caches
+.pytest_cache/
+.cache/
+__pycache__/
+.mypy_cache/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Logs and reports
+*.log
+logs/
+.coverage
+coverage.xml
+htmlcov/
+
+# IDEs and editors
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Distribution / wheel
+pip-wheel-metadata/
+*.whl
+*.egg
+
+# Node
+node_modules/
+
+# Misc
+*.tmp
+*.temp
+*.bak
+*.swp
+*.swo
+
+# Generated diagrams (optional)
+# diagrams/
+
+# Ensure '.env' is not ignored (explicitly include it)
+!.env
+
