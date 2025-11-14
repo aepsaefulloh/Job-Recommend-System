@@ -1,48 +1,48 @@
 
-@startuml Diagram Sekuens - Survey & Prediksi
+@startuml Sequence Diagram - Survey & Prediction
 
-actor "Alumni SMK" as User
-participant "Aplikasi Flask" as Flask
+actor "SMK Alumni" as User
+participant "Flask App" as Flask
 participant "predictor.py" as Predictor
-participant "Model ML" as ML
+participant "ML Model" as ML
 participant "Database" as DB
-participant "Halaman Hasil" as Result
+participant "Result Page" as Result
 
-== Pengiriman Survey ==
-User -> Flask: GET / (halaman utama)
-Flask --> User: formulir survey
+== Survey Submission ==
+User -> Flask: GET / (homepage)
+Flask --> User: survey form
 
-User -> Flask: POST /result (kirim survey)
+User -> Flask: POST /result (submit survey)
 Flask -> Predictor: preprocess_form_data(form_data)
 
 Predictor -> Predictor: encode_features()
-Predictor -> ML: Muat model & scaler
-ML --> Predictor: Model dimuat
+Predictor -> ML: Load model & scaler
+ML --> Predictor: Model loaded
 
 Predictor -> ML: make_predictions()
-ML --> Predictor: hasil prediksi
+ML --> Predictor: prediction results
 
-Predictor --> Flask: hasil prediksi
+Predictor --> Flask: prediction results
 
-Flask -> DB: Simpan survey (opsional)
-DB --> Flask: Data tersimpan
+Flask -> DB: Save survey (optional)
+DB --> Flask: Data saved
 
 Flask -> Result: Render result.html
-Result --> User: Tampilkan rekomendasi
+Result --> User: Display recommendations
 
-== Dashboard Admin ==
+== Admin Dashboard ==
 actor "Administrator" as Admin
 Admin -> Flask: GET /login
-Flask --> Admin: formulir login
+Flask --> Admin: login form
 
 Admin -> Flask: POST /login
-Flask -> DB: validasi kredensial
-DB --> Flask: pengguna terautentikasi
+Flask -> DB: validate credentials
+DB --> Flask: user authenticated
 
-Flask --> Admin: redirect ke /dashboard
+Flask --> Admin: redirect to /dashboard
 Admin -> Flask: GET /dashboard
 Flask -> DB: query survey_data & stats
-DB --> Flask: data dashboard
-Flask --> Admin: dashboard dengan grafik
+DB --> Flask: dashboard data
+Flask --> Admin: dashboard with charts
 
 @enduml

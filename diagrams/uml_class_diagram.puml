@@ -1,7 +1,7 @@
 
-@startuml Diagram Kelas UML - Sistem Rekomendasi Pekerjaan
+@startuml UML Class Diagram - Job Recommendation System
 
-class DataSurvey {
+class SurveyData {
     - id: int
     - email: string
     - nama: string
@@ -19,13 +19,13 @@ class DataSurvey {
     - created_at: datetime
     - updated_at: datetime
     --
-    + simpan(): void
+    + save(): void
     + update(): void
-    + hapus(): void
-    + dapatkan_rekomendasi(): list
+    + delete(): void
+    + get_recommendations(): list
 }
 
-class Pengguna {
+class User {
     - id: int
     - username: string
     - email: string
@@ -43,19 +43,19 @@ class Pengguna {
     + logout(): void
 }
 
-class StatistikDashboard {
+class DashboardStats {
     - id: int
-    - nama_statistik: string
-    - nilai_statistik: float
-    - tipe_statistik: string
+    - stat_name: string
+    - stat_value: float
+    - stat_type: string
     - updated_at: datetime
     --
     + update(): void
-    + hitung(): float
-    + dapatkan_nilai(): float
+    + calculate(): float
+    + get_value(): float
 }
 
-class Prediktor {
+class Predictor {
     - knn_jurusan: KNeighborsClassifier
     - knn_perusahaan: KNeighborsClassifier
     - scaler: StandardScaler
@@ -67,7 +67,7 @@ class Prediktor {
     + load_models(): boolean
 }
 
-class ModelKNN {
+class KNNModel {
     - n_neighbors: int
     - weights: string
     - metric: string
@@ -77,19 +77,19 @@ class ModelKNN {
     + predict_proba(X): array
 }
 
-' Relasi
-DataSurvey "1" -- "*" Pengguna : dimiliki oleh
-StatistikDashboard "*" -- "1" DataSurvey : dihitung dari
-Prediktor --> DataSurvey : menggunakan
-Prediktor --> ModelKNN : berisi
-Pengguna --> StatistikDashboard : akses admin
+' Relationships
+SurveyData "1" -- "*" User : owned by
+DashboardStats "*" -- "1" SurveyData : calculated from
+Predictor --> SurveyData : uses
+Predictor --> KNNModel : contains
+User --> DashboardStats : admin access
 
 ' Interface
-interface "ModelML" {
+interface "MLModel" {
     + fit(X, y): void
     + predict(X): array
 }
 
-ModelKNN ..|> ModelML : mengimplementasi
+KNNModel ..|> MLModel : implements
 
 @enduml

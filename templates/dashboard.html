@@ -40,7 +40,7 @@
                     <h1 class="text-xl font-bold text-neutral-800">📊 Dashboard</h1>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <span class="text-sm text-neutral-600">Welcome, {{ current_user.full_name }}</span>
+                    <span class="text-sm text-neutral-600">Welcome, {{ current_user.full_name }} ({{ current_user.role }})</span>
                     <a href="{{ url_for('logout') }}" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
                         Logout
                     </a>
@@ -50,6 +50,22 @@
     </nav>
 
     <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="mb-6 space-y-2">
+                    {% for category, message in messages %}
+                        <div class="{% if category == 'success' %}bg-green-50 border-green-400 text-green-800{% else %}bg-red-50 border-red-400 text-red-800{% endif %} px-4 py-3 rounded-lg shadow-md border">
+                            <div class="flex items-center">
+                                <span class="text-lg mr-2">{% if category == 'success' %}✓{% else %}✗{% endif %}</span>
+                                <span class="block sm:inline">{{ message }}</span>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
         <!-- Statistics Cards -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             <div class="bg-white rounded-xl shadow-md p-6 border border-neutral-200">
@@ -128,21 +144,138 @@
             </div>
         </div>
 
+        {% if current_user.role == 'admin' %}
+        <!-- User Management Section -->
+        <div class="bg-white rounded-xl shadow-md border border-neutral-200 mb-8">
+            <div class="p-6 border-b border-neutral-200">
+                <h3 class="text-lg font-bold text-neutral-800">User Management</h3>
+                <p class="text-sm text-neutral-600 mt-1">Manage user roles and permissions</p>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-neutral-200">
+                    <thead class="bg-neutral-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Username</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Full Name</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Email</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Role</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Last Login</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-neutral-200">
+                        {% for user in users %}
+                        <tr class="hover:bg-neutral-50">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-neutral-900">
+                                {{ user.username }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-neutral-500">
+                                {{ user.full_name }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-neutral-500">
+                                {{ user.email }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
+                                    {% if user.role == 'admin' %}
+                                        bg-red-100 text-red-800
+                                    {% else %}
+                                        bg-blue-100 text-blue-800
+                                    {% endif %}">
+                                    {{ user.role }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-neutral-500">
+                                {% if user.last_login %}
+                                    {{ user.last_login.strftime('%Y-%m-%d %H:%M') }}
+                                {% else %}
+                                    Never
+                                {% endif %}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                {% if user.id != current_user.id %}
+                                <form method="POST" action="{{ url_for('update_user_role', user_id=user.id) }}" class="inline-block">
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                                    <select name="role" data-original-role="{{ user.role }}" data-username="{{ user.username }}" onchange="handleRoleChange(this)" class="px-2 py-1 border border-neutral-300 rounded text-xs focus:ring-primary focus:border-primary">
+                                        <option value="viewer" {% if user.role == 'viewer' %}selected{% endif %}>Viewer</option>
+                                        <option value="admin" {% if user.role == 'admin' %}selected{% endif %}>Admin</option>
+                                    </select>
+                                </form>
+                                {% else %}
+                                <span class="text-neutral-400 text-xs">Current User</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- User Pagination -->
+            {% if user_pagination %}
+            <div class="bg-white px-4 py-3 border-t border-neutral-200 sm:px-6">
+                <div class="flex items-center justify-between">
+                    <div class="text-sm text-neutral-700">
+                        Showing {{ ((user_pagination.page - 1) * user_pagination.per_page) + 1 }} to {{ (user_pagination.page * user_pagination.per_page) if (user_pagination.page * user_pagination.per_page) < user_pagination.total else user_pagination.total }} of {{ user_pagination.total }} users
+                    </div>
+                    <div class="flex space-x-2">
+                        {% if user_pagination.has_prev %}
+                        <a href="{{ url_for('dashboard', user_page=user_pagination.page-1, **filtered_args) }}" class="px-3 py-1 border border-neutral-300 rounded text-sm hover:bg-neutral-50">Previous</a>
+                        {% endif %}
+
+                        {% for page_num in user_pagination.iter_pages() %}
+                        {% if page_num %}
+                        <a href="{{ url_for('dashboard', user_page=page_num, **filtered_args) }}" class="px-3 py-1 border border-neutral-300 rounded text-sm hover:bg-neutral-50
+                            {% if page_num == user_pagination.page %} bg-primary text-white border-primary {% endif %}">{{ page_num }}</a>
+                        {% else %}
+                        <span class="px-2 py-1">...</span>
+                        {% endif %}
+                        {% endfor %}
+
+                        {% if user_pagination.has_next %}
+                        <a href="{{ url_for('dashboard', user_page=user_pagination.page+1, **filtered_args) }}" class="px-3 py-1 border border-neutral-300 rounded text-sm hover:bg-neutral-50">Next</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+
         <!-- Survey Data Table -->
         <div class="bg-white rounded-xl shadow-md border border-neutral-200">
             <div class="p-6 border-b border-neutral-200">
                 <div class="flex justify-between items-center">
                     <h3 class="text-lg font-bold text-neutral-800">Data Survey Alumni</h3>
                     <div class="flex space-x-4">
+                        {% if current_user.role == 'admin' %}
+                        <!-- Export Excel Button -->
+                        <a href="{{ url_for('export_excel') }}" onclick="showExportLoading(event)" class="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg text-sm font-medium transition-colors flex items-center">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
+                            <span id="exportButtonText">Export Excel</span>
+                            <span id="exportButtonLoading" class="hidden">
+                                <svg class="animate-spin h-4 w-4 ml-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                            </span>
+                        </a>
+                        {% endif %}
                         <!-- Filter Form -->
+                        {% if filter_form %}
                         <form method="GET" class="flex space-x-2">
                             {{ filter_form.hidden_tag() }}
+                            {{ filter_form.search(class="px-3 py-2 border border-neutral-300 rounded-lg text-sm focus:ring-primary focus:border-primary", placeholder="Cari nama atau email...") }}
                             {{ filter_form.status_bekerja(class="px-3 py-2 border border-neutral-300 rounded-lg text-sm focus:ring-primary focus:border-primary") }}
                             {{ filter_form.jurusan(class="px-3 py-2 border border-neutral-300 rounded-lg text-sm focus:ring-primary focus:border-primary") }}
                             {{ filter_form.tempat_tinggal(class="px-3 py-2 border border-neutral-300 rounded-lg text-sm focus:ring-primary focus:border-primary") }}
                             {{ filter_form.jenis_perusahaan(class="px-3 py-2 border border-neutral-300 rounded-lg text-sm focus:ring-primary focus:border-primary") }}
                             {{ filter_form.submit(class="px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium hover:bg-secondary transition-colors") }}
                         </form>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -240,6 +373,47 @@
     </div>
 
     <script>
+        // Show loading indicator when exporting
+        function showExportLoading(event) {
+            const buttonText = document.getElementById('exportButtonText');
+            const buttonLoading = document.getElementById('exportButtonLoading');
+            
+            if (buttonText && buttonLoading) {
+                buttonText.textContent = 'Exporting...';
+                buttonLoading.classList.remove('hidden');
+                
+                // Hide loading after 5 seconds (in case download completes)
+                setTimeout(() => {
+                    buttonText.textContent = 'Export Excel';
+                    buttonLoading.classList.add('hidden');
+                }, 5000);
+            }
+        }
+
+        // Handle role change with confirmation
+        function handleRoleChange(select) {
+            const newRole = select.value;
+            const originalRole = select.getAttribute('data-original-role');
+            const username = select.getAttribute('data-username');
+            
+            // If role hasn't changed, don't submit
+            if (newRole === originalRole) {
+                return;
+            }
+            
+            // Confirm the change
+            const message = `Are you sure you want to change ${username}'s role from "${originalRole}" to "${newRole}"?\n\nThis will immediately affect their access permissions.`;
+            const confirmed = confirm(message);
+            
+            if (confirmed) {
+                // Submit the form
+                select.closest('form').submit();
+            } else {
+                // Reset to original value
+                select.value = originalRole;
+            }
+        }
+
         // Helper function to safely get data
         function safeData(data, defaultValue = []) {
             return data || defaultValue;

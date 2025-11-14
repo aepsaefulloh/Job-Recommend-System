@@ -17,7 +17,7 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(128), nullable=False)  # Plain text password for thesis
     full_name = db.Column(db.String(100), nullable=False)
-    role = db.Column(db.String(20), default='user')  # admin, user
+    role = db.Column(db.String(20), default='viewer')  # admin, viewer
     is_active = db.Column(db.Boolean, default=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     last_login = db.Column(db.DateTime)

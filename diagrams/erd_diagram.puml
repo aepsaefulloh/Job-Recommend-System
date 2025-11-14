@@ -1,8 +1,8 @@
 
-@startuml Diagram ERD - Sistem Rekomendasi Pekerjaan
+@startuml ERD - Job Recommendation System
 
-' Entitas
-entity "DATA_SURVEY" as survey {
+' Entities
+entity "SURVEY_DATA" as survey {
     + id : INT <<PK>>
     --
     email : VARCHAR(120) <<UK>>
@@ -23,7 +23,7 @@ entity "DATA_SURVEY" as survey {
     updated_at : DATETIME
 }
 
-entity "PENGGUNA" as users {
+entity "USERS" as users {
     + id : INT <<PK>>
     --
     username : VARCHAR(80) <<UK>>
@@ -37,24 +37,24 @@ entity "PENGGUNA" as users {
     last_login : DATETIME
 }
 
-entity "STATISTIK_DASHBOARD" as stats {
+entity "DASHBOARD_STATS" as stats {
     + id : INT <<PK>>
     --
-    nama_statistik : VARCHAR(50) <<UK>>
-    nilai_statistik : FLOAT
-    tipe_statistik : VARCHAR(20)
+    stat_name : VARCHAR(50) <<UK>>
+    stat_value : FLOAT
+    stat_type : VARCHAR(20)
     --
     updated_at : DATETIME
 }
 
-' Relasi
-survey ||..o{ users : "dimiliki oleh"
-stats ||..o{ survey : "dihitung dari"
-users ||..o{ stats : "akses admin"
+' Relationships
+survey ||..o{ users : "owned by"
+stats ||..o{ survey : "calculated from"
+users ||..o{ stats : "admin access"
 
-' Legenda
+' Legend
 legend right
-    |= Simbol |= Arti |
+    |= Symbol |= Meaning |
     | PK | Primary Key |
     | UK | Unique Key |
     | FK | Foreign Key |
