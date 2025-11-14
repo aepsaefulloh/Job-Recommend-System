@@ -11,7 +11,7 @@ from datetime import datetime
 # Set random seed for reproducibility
 np.random.seed(42)
 
-# Number of records - INCREASED for better model performance
+# Untuk jumlah data yang di-generate
 n_samples = 7000
 
 print("🚀 Generating SMK Survey Dataset...")
