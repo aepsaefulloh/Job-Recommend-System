@@ -76,6 +76,7 @@
                 </div>
 
                 <!-- Visualization 5 -->
+                {% if plot5 %}
                 <div class="chart-container">
                     <h3>5. Matriks Korelasi Fitur Numerik</h3>
                     <img src="data:image/png;base64,{{ plot5 }}" alt="Correlation Heatmap">
@@ -88,6 +89,15 @@
                         </ul>
                     </div>
                 </div>
+                {% else %}
+                <div class="chart-container">
+                    <h3>5. Matriks Korelasi Fitur Numerik</h3>
+                    <div class="insight-card">
+                        <h4>ℹ️ Informasi:</h4>
+                        <p>Matriks korelasi sedang dalam pengembangan. Grafik lain menunjukkan pola hubungan antar variabel.</p>
+                    </div>
+                </div>
+                {% endif %}
 
                 <!-- Visualization 6 -->
                 <div class="chart-container">

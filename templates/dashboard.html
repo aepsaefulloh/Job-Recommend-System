@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Job Recommendation System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3b82f6',
+                        secondary: '#2563eb',
+                        neutral: {
+                            50: '#f8fafc',
+                            100: '#f1f5f9',
+                            200: '#e2e8f0',
+                            300: '#cbd5e1',
+                            400: '#94a3b8',
+                            500: '#64748b',
+                            600: '#475569',
+                            700: '#334155',
+                            800: '#1e293b',
+                            900: '#0f172a',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gradient-to-br from-neutral-50 to-neutral-200 min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg border-b border-neutral-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <h1 class="text-xl font-bold text-neutral-800">📊 Dashboard</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span class="text-sm text-neutral-600">Welcome, {{ current_user.full_name }}</span>
+                    <a href="{{ url_for('logout') }}" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                        Logout
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+        <!-- Statistics Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white rounded-xl shadow-md p-6 border border-neutral-200">
+                <div class="flex items-center">
+                    <div class="p-3 rounded-full bg-blue-100">
+                        <span class="text-2xl">📋</span>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-neutral-600">Total Survey</p>
+                        <p class="text-2xl font-bold text-neutral-800">{{ stats.total_surveys|default(0) }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-md p-6 border border-neutral-200">
+                <div class="flex items-center">
+                    <div class="p-3 rounded-full bg-green-100">
+                        <span class="text-2xl">💼</span>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-neutral-600">Sudah Bekerja</p>
+                        <p class="text-2xl font-bold text-neutral-800">{{ stats.employed_count|default(0) }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-md p-6 border border-neutral-200">
+                <div class="flex items-center">
+                    <div class="p-3 rounded-full bg-yellow-100">
+                        <span class="text-2xl">🔍</span>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-neutral-600">Belum Bekerja</p>
+                        <p class="text-2xl font-bold text-neutral-800">{{ stats.unemployed_count|default(0) }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-md p-6 border border-neutral-200">
+                <div class="flex items-center">
+                    <div class="p-3 rounded-full bg-purple-100">
+                        <span class="text-2xl">📈</span>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-neutral-600">Tingkat Ketenagakerjaan</p>
+                        <p class="text-2xl font-bold text-neutral-800">{{ "%.1f"|format(stats.employment_rate|default(0)) }}%</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+            <!-- Employment Status Chart -->
+            <div class="bg-white rounded-xl shadow-md p-6 border border-neutral-200">
+                <h3 class="text-lg font-bold text-neutral-800 mb-4">Status Ketenagakerjaan</h3>
+                <canvas id="employmentChart" width="400" height="300"></canvas>
+            </div>
+
+            <!-- Major Distribution Chart -->
+            <div class="bg-white rounded-xl shadow-md p-6 border border-neutral-200">
+                <h3 class="text-lg font-bold text-neutral-800 mb-4">Distribusi Jurusan</h3>
+                <canvas id="majorChart" width="400" height="300"></canvas>
+            </div>
+
+            <!-- Location Distribution Chart -->
+            <div class="bg-white rounded-xl shadow-md p-6 border border-neutral-200">
+                <h3 class="text-lg font-bold text-neutral-800 mb-4">Distribusi Lokasi</h3>
+                <canvas id="locationChart" width="400" height="300"></canvas>
+            </div>
+
+            <!-- Company Type Chart -->
+            <div class="bg-white rounded-xl shadow-md p-6 border border-neutral-200">
+                <h3 class="text-lg font-bold text-neutral-800 mb-4">Tipe Perusahaan</h3>
+                <canvas id="companyChart" width="400" height="300"></canvas>
+            </div>
+        </div>
+
+        <!-- Survey Data Table -->
+        <div class="bg-white rounded-xl shadow-md border border-neutral-200">
+            <div class="p-6 border-b border-neutral-200">
+                <div class="flex justify-between items-center">
+                    <h3 class="text-lg font-bold text-neutral-800">Data Survey Alumni</h3>
+                    <div class="flex space-x-4">
+                        <!-- Filter Form -->
+                        <form method="GET" class="flex space-x-2">
+                            {{ filter_form.hidden_tag() }}
+                            {{ filter_form.status_bekerja(class="px-3 py-2 border border-neutral-300 rounded-lg text-sm focus:ring-primary focus:border-primary") }}
+                            {{ filter_form.jurusan(class="px-3 py-2 border border-neutral-300 rounded-lg text-sm focus:ring-primary focus:border-primary") }}
+                            {{ filter_form.tempat_tinggal(class="px-3 py-2 border border-neutral-300 rounded-lg text-sm focus:ring-primary focus:border-primary") }}
+                            {{ filter_form.jenis_perusahaan(class="px-3 py-2 border border-neutral-300 rounded-lg text-sm focus:ring-primary focus:border-primary") }}
+                            {{ filter_form.submit(class="px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium hover:bg-secondary transition-colors") }}
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-neutral-200">
+                    <thead class="bg-neutral-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Nama</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Email</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Jurusan</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Lokasi</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Status</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Profesi</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Gaji</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Prediksi</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-neutral-200">
+                        {% for survey in surveys %}
+                        <tr class="hover:bg-neutral-50">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-neutral-900">
+                                {{ survey.nama }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-neutral-500">
+                                {{ survey.email }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-neutral-500">
+                                {{ survey.jurusan }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-neutral-500">
+                                {{ survey.tempat_tinggal }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
+                                    {% if survey.status_bekerja == 'Ya' %}
+                                        bg-green-100 text-green-800
+                                    {% else %}
+                                        bg-yellow-100 text-yellow-800
+                                    {% endif %}">
+                                    {{ 'Bekerja' if survey.status_bekerja == 'Ya' else 'Belum' }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-neutral-500">
+                                {{ survey.profesi_sekarang or '-' }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-neutral-500">
+                                {% if survey.gaji %}
+                                    Rp {{ "{:,.0f}".format(survey.gaji) }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-neutral-500">
+                                <div class="text-xs">
+                                    <div class="font-medium">{{ survey.jurusan_cocok or '-' }}</div>
+                                    <div class="text-neutral-400">{{ survey.perusahaan_tepat or '-' }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination -->
+            {% if pagination %}
+            <div class="bg-white px-4 py-3 border-t border-neutral-200 sm:px-6">
+                <div class="flex items-center justify-between">
+                    <div class="text-sm text-neutral-700">
+                        Showing {{ ((pagination.page - 1) * pagination.per_page) + 1 }} to {{ (pagination.page * pagination.per_page) if (pagination.page * pagination.per_page) < pagination.total else pagination.total }} of {{ pagination.total }} results
+                    </div>
+                    <div class="flex space-x-2">
+                        {% if pagination.has_prev %}
+                        <a href="{{ url_for('dashboard', page=pagination.page-1, **filtered_args) }}" class="px-3 py-1 border border-neutral-300 rounded text-sm hover:bg-neutral-50">Previous</a>
+                        {% endif %}
+
+                        {% for page_num in pagination.iter_pages() %}
+                        {% if page_num %}
+                        <a href="{{ url_for('dashboard', page=page_num, **filtered_args) }}" class="px-3 py-1 border border-neutral-300 rounded text-sm hover:bg-neutral-50
+                            {% if page_num == pagination.page %} bg-primary text-white border-primary {% endif %}">{{ page_num }}</a>
+                        {% else %}
+                        <span class="px-2 py-1">...</span>
+                        {% endif %}
+                        {% endfor %}
+
+                        {% if pagination.has_next %}
+                        <a href="{{ url_for('dashboard', page=pagination.page+1, **filtered_args) }}" class="px-3 py-1 border border-neutral-300 rounded text-sm hover:bg-neutral-50">Next</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <script>
+        // Helper function to safely get data
+        function safeData(data, defaultValue = []) {
+            return data || defaultValue;
+        }
+
+        // Employment Status Chart
+        try {
+            const employmentCtx = document.getElementById('employmentChart');
+            if (employmentCtx) {
+                new Chart(employmentCtx.getContext('2d'), {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Sudah Bekerja', 'Belum Bekerja'],
+                        datasets: [{
+                            data: [
+                                {{ stats.employed_count|default(0) }},
+                                {{ stats.unemployed_count|default(0) }}
+                            ],
+                            backgroundColor: ['#10b981', '#f59e0b'],
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'bottom'
+                            }
+                        }
+                    }
+                });
+            }
+        } catch (error) {
+            console.error('Error creating employment chart:', error);
+        }
+
+        // Major Distribution Chart
+        try {
+            const majorCtx = document.getElementById('majorChart');
+            if (majorCtx) {
+                const majorLabels = {{ major_labels|tojson if major_labels else '[]' }};
+                const majorData = {{ major_data|tojson if major_data else '[]' }};
+
+                new Chart(majorCtx.getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: majorLabels,
+                        datasets: [{
+                            label: 'Jumlah Alumni',
+                            data: majorData,
+                            backgroundColor: '#3b82f6',
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            }
+        } catch (error) {
+            console.error('Error creating major chart:', error);
+        }
+
+        // Location Distribution Chart
+        try {
+            const locationCtx = document.getElementById('locationChart');
+            if (locationCtx) {
+                const locationLabels = {{ location_labels|tojson if location_labels else '[]' }};
+                const locationData = {{ location_data|tojson if location_data else '[]' }};
+
+                new Chart(locationCtx.getContext('2d'), {
+                    type: 'pie',
+                    data: {
+                        labels: locationLabels,
+                        datasets: [{
+                            data: locationData,
+                            backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'],
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'bottom'
+                            }
+                        }
+                    }
+                });
+            }
+        } catch (error) {
+            console.error('Error creating location chart:', error);
+        }
+
+        // Company Type Chart
+        try {
+            const companyCtx = document.getElementById('companyChart');
+            if (companyCtx) {
+                const companyLabels = {{ company_labels|tojson if company_labels else '[]' }};
+                const companyData = {{ company_data|tojson if company_data else '[]' }};
+
+                new Chart(companyCtx.getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: companyLabels,
+                        datasets: [{
+                            label: 'Jumlah Alumni',
+                            data: companyData,
+                            backgroundColor: '#10b981',
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            }
+        } catch (error) {
+            console.error('Error creating company chart:', error);
+        }
+    </script>
+</body>
+</html>

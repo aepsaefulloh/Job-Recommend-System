@@ -12,7 +12,7 @@ from datetime import datetime
 np.random.seed(42)
 
 # Number of records - INCREASED for better model performance
-n_samples = 3000
+n_samples = 7000
 
 print("🚀 Generating SMK Survey Dataset...")
 print(f"📊 Creating {n_samples} records with 28+ fields")

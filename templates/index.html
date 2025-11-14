@@ -126,9 +126,92 @@
                     <h2>💼 Section 2 - Untuk Yang Sudah Bekerja</h2>
                     <div class="form-group">
                         <label for="profesi_sekarang">Apa profesi Anda saat ini? <span class="required">*</span></label>
-                        <input type="text" id="profesi_sekarang" name="profesi_sekarang"
-                            placeholder="Contoh: Staff Administrasi, Marketing, Akuntan, dll">
-                        <div class="hint">Tuliskan posisi/jabatan pekerjaan Anda saat ini</div>
+                        <select id="profesi_sekarang" name="profesi_sekarang">
+                            <option value="">-- Pilih Profesi --</option>
+                            <optgroup label="Administrasi & Perkantoran">
+                                <option value="Staff Administrasi">Staff Administrasi</option>
+                                <option value="Sekretaris">Sekretaris</option>
+                                <option value="Resepsionis">Resepsionis</option>
+                                <option value="Administrative Assistant">Administrative Assistant</option>
+                                <option value="Office Manager">Office Manager</option>
+                                <option value="Data Entry Clerk">Data Entry Clerk</option>
+                                <option value="Document Controller">Document Controller</option>
+                            </optgroup>
+                            <optgroup label="Customer Service & Support">
+                                <option value="Customer Service Representative">Customer Service Representative</option>
+                                <option value="Customer Support Specialist">Customer Support Specialist</option>
+                                <option value="Call Center Agent">Call Center Agent</option>
+                                <option value="Help Desk Officer">Help Desk Officer</option>
+                                <option value="Client Relations Officer">Client Relations Officer</option>
+                            </optgroup>
+                            <optgroup label="Marketing & Sales">
+                                <option value="Marketing Staff">Marketing Staff</option>
+                                <option value="Sales Executive">Sales Executive</option>
+                                <option value="Business Development Officer">Business Development Officer</option>
+                                <option value="Account Executive">Account Executive</option>
+                                <option value="Sales Coordinator">Sales Coordinator</option>
+                                <option value="Marketing Coordinator">Marketing Coordinator</option>
+                                <option value="Brand Ambassador">Brand Ambassador</option>
+                                <option value="Promotor">Promotor</option>
+                            </optgroup>
+                            <optgroup label="Keuangan & Akuntansi">
+                                <option value="Akuntan">Akuntan</option>
+                                <option value="Staff Keuangan">Staff Keuangan</option>
+                                <option value="Accounting Staff">Accounting Staff</option>
+                                <option value="Finance Officer">Finance Officer</option>
+                                <option value="Tax Staff">Tax Staff</option>
+                                <option value="Kasir">Kasir</option>
+                                <option value="Billing Staff">Billing Staff</option>
+                                <option value="Treasury Staff">Treasury Staff</option>
+                                <option value="Auditor">Auditor</option>
+                            </optgroup>
+                            <optgroup label="Human Resources">
+                                <option value="HR Staff">HR Staff</option>
+                                <option value="HR Officer">HR Officer</option>
+                                <option value="Recruitment Staff">Recruitment Staff</option>
+                                <option value="Training Coordinator">Training Coordinator</option>
+                                <option value="Payroll Staff">Payroll Staff</option>
+                            </optgroup>
+                            <optgroup label="Logistik & Procurement">
+                                <option value="Purchasing Staff">Purchasing Staff</option>
+                                <option value="Procurement Officer">Procurement Officer</option>
+                                <option value="Logistics Coordinator">Logistics Coordinator</option>
+                                <option value="Warehouse Staff">Warehouse Staff</option>
+                                <option value="Inventory Control">Inventory Control</option>
+                                <option value="Supply Chain Staff">Supply Chain Staff</option>
+                            </optgroup>
+                            <optgroup label="IT & Technology">
+                                <option value="IT Support">IT Support</option>
+                                <option value="System Administrator">System Administrator</option>
+                                <option value="Network Administrator">Network Administrator</option>
+                                <option value="Database Administrator">Database Administrator</option>
+                                <option value="Web Developer">Web Developer</option>
+                                <option value="Software Developer">Software Developer</option>
+                            </optgroup>
+                            <optgroup label="Creative & Digital">
+                                <option value="Graphic Designer">Graphic Designer</option>
+                                <option value="Content Creator">Content Creator</option>
+                                <option value="Social Media Specialist">Social Media Specialist</option>
+                                <option value="Digital Marketing Specialist">Digital Marketing Specialist</option>
+                                <option value="Copywriter">Copywriter</option>
+                                <option value="Video Editor">Video Editor</option>
+                                <option value="Photographer">Photographer</option>
+                            </optgroup>
+                            <optgroup label="Management & Supervision">
+                                <option value="Supervisor">Supervisor</option>
+                                <option value="Team Leader">Team Leader</option>
+                                <option value="Manager">Manager</option>
+                                <option value="Assistant Manager">Assistant Manager</option>
+                                <option value="Project Coordinator">Project Coordinator</option>
+                            </optgroup>
+                            <optgroup label="Lainnya">
+                                <option value="Wirausaha">Wirausaha/Usaha Sendiri</option>
+                                <option value="Freelancer">Freelancer</option>
+                                <option value="Konsultan">Konsultan</option>
+                                <option value="Lainnya">Lainnya</option>
+                            </optgroup>
+                        </select>
+                        <div class="hint">Pilih posisi/jabatan pekerjaan Anda saat ini</div>
                     </div>
                     <div class="form-group">
                         <label for="tempat_kerja_saat_ini">Tempat pekerjaan saat ini <span

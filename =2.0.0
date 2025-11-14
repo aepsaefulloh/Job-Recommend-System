@@ -1,0 +1,12 @@
+Collecting email-validator
+  Downloading email_validator-2.3.0-py3-none-any.whl.metadata (26 kB)
+Collecting dnspython>=2.0.0 (from email-validator)
+  Downloading dnspython-2.8.0-py3-none-any.whl.metadata (5.7 kB)
+Collecting idna>=2.0.0 (from email-validator)
+  Downloading idna-3.11-py3-none-any.whl.metadata (8.4 kB)
+Downloading email_validator-2.3.0-py3-none-any.whl (35 kB)
+Downloading dnspython-2.8.0-py3-none-any.whl (331 kB)
+Downloading idna-3.11-py3-none-any.whl (71 kB)
+Installing collected packages: idna, dnspython, email-validator
+
+Successfully installed dnspython-2.8.0 email-validator-2.3.0 idna-3.11

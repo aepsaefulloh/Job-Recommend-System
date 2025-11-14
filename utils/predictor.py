@@ -381,6 +381,64 @@ def get_job_recommendations(jurusan_cocok, perusahaan_tepat, tempat_tinggal):
     return recommended_jobs[:4]
 
 
+def validate_job_major_consistency(jurusan, profesi, kesesuaian_jurusan):
+    """
+    Validate if job matches the educational background
+    
+    Args:
+        jurusan: SMK major
+        profesi: Current profession
+        kesesuaian_jurusan: User's answer about job-major compatibility
+        
+    Returns:
+        dict: Validation result with warning and adjusted prediction
+    """
+    # Define major-profession mapping
+    major_job_mapping = {
+        'Akuntansi': ['Akuntan', 'Accounting Staff', 'Staff Keuangan', 'Finance Officer', 
+                      'Tax Staff', 'Auditor', 'Kasir', 'Billing Staff', 'Treasury Staff'],
+        'Perkantoran': ['Staff Administrasi', 'Sekretaris', 'Resepsionis', 'Administrative Assistant',
+                        'Office Manager', 'Data Entry Clerk', 'Document Controller', 
+                        'Customer Service Representative', 'Call Center Agent'],
+        'Pemasaran': ['Marketing Staff', 'Sales Executive', 'Business Development Officer',
+                     'Account Executive', 'Marketing Coordinator', 'Brand Ambassador',
+                     'Digital Marketing Specialist', 'Social Media Specialist', 'Copywriter']
+    }
+    
+    is_consistent = False
+    warning_message = None
+    confidence_penalty = 0
+    
+    # Check if profession matches the major
+    expected_jobs = major_job_mapping.get(jurusan, [])
+    if profesi in expected_jobs:
+        is_consistent = True
+    else:
+        # Job doesn't match major
+        is_consistent = False
+        confidence_penalty = 0.3  # Reduce confidence by 30%
+        
+        # Create warning message
+        expected_jobs_str = ', '.join(expected_jobs[:3]) + '...' if len(expected_jobs) > 3 else ', '.join(expected_jobs)
+        warning_message = {
+            'type': 'mismatch',
+            'title': '⚠️ Inkonsistensi Terdeteksi',
+            'message': f'Profesi "{profesi}" tidak sesuai dengan jurusan SMK "{jurusan}". '
+                      f'Profesi yang sesuai dengan jurusan Anda: {expected_jobs_str}',
+            'impact': 'Prediksi "Perusahaan Tepat" mungkin kurang akurat karena ketidaksesuaian ini.'
+        }
+        
+        # If user already marked as "Tidak sesuai", validate consistency
+        if kesesuaian_jurusan == 'Tidak':
+            warning_message['note'] = '✓ Anda sudah menyadari bahwa pekerjaan tidak sesuai dengan jurusan.'
+    
+    return {
+        'is_consistent': is_consistent,
+        'warning': warning_message,
+        'confidence_penalty': confidence_penalty
+    }
+
+
 def make_predictions(form_data, models):
     """
     Make predictions based on form data
@@ -397,6 +455,7 @@ def make_predictions(form_data, models):
             - jurusan_proba: Prediction probabilities for major
             - perusahaan_proba: Prediction probabilities for company
             - recommended_jobs: List of recommended jobs
+            - validation: Consistency validation results
     """
     # Extract models
     knn_jurusan = models['knn_jurusan']
@@ -425,6 +484,29 @@ def make_predictions(form_data, models):
     jurusan_cocok = label_encoders['jurusan_cocok'].inverse_transform([jurusan_pred_encoded])[0]
     perusahaan_tepat = label_encoders['perusahaan_tepat'].inverse_transform([perusahaan_pred_encoded])[0]
     
+    # Validate job-major consistency (only for employed users)
+    validation_result = None
+    if processed_data['status_bekerja'] == 'Ya':
+        validation_result = validate_job_major_consistency(
+            processed_data['jurusan'],
+            processed_data['profesi_sekarang'],
+            processed_data['kesesuaian_jurusan']
+        )
+        
+        # If inconsistent, adjust prediction confidence
+        if not validation_result['is_consistent']:
+            # Reduce prediction confidence
+            confidence_penalty = validation_result['confidence_penalty']
+            jurusan_proba = jurusan_proba * (1 - confidence_penalty)
+            perusahaan_proba = perusahaan_proba * (1 - confidence_penalty)
+            
+            # Consider adjusting "Tepat" to "Tidak Tepat" if confidence is low
+            max_perusahaan_proba = max(perusahaan_proba)
+            if max_perusahaan_proba < 0.6 and perusahaan_tepat == 'Tepat':
+                # Override prediction to "Tidak Tepat"
+                perusahaan_tepat = 'Tidak Tepat'
+                print(f"⚠️ Prediction adjusted: Changed 'Tepat' to 'Tidak Tepat' due to job-major mismatch")
+    
     # Generate job recommendations
     recommended_jobs = get_job_recommendations(
         jurusan_cocok, 
@@ -439,5 +521,6 @@ def make_predictions(form_data, models):
         'perusahaan_tepat': perusahaan_tepat,
         'jurusan_proba': jurusan_proba,
         'perusahaan_proba': perusahaan_proba,
-        'recommended_jobs': recommended_jobs
+        'recommended_jobs': recommended_jobs,
+        'validation': validation_result
     }

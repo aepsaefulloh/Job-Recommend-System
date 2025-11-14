@@ -9,7 +9,7 @@ from .visualization import (
     generate_work_time_vs_satisfaction,
     generate_gpa_distribution,
     generate_salary_distribution,
-    generate_correlation_heatmap,
+    # generate_correlation_heatmap,  # Temporarily commented out due to seaborn import issues
     generate_experience_box,
     generate_top_jurusan_bar,
     generate_satisfaction_pie,
@@ -26,7 +26,7 @@ __all__ = [
     'generate_work_time_vs_satisfaction',
     'generate_gpa_distribution',
     'generate_salary_distribution',
-    'generate_correlation_heatmap',
+    # 'generate_correlation_heatmap',  # Temporarily commented out due to seaborn import issues
     'generate_experience_box',
     'generate_top_jurusan_bar',
     'generate_satisfaction_pie',

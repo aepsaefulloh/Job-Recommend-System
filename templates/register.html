@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Job Recommendation System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3b82f6',
+                        secondary: '#2563eb',
+                        neutral: {
+                            50: '#f8fafc',
+                            100: '#f1f5f9',
+                            200: '#e2e8f0',
+                            300: '#cbd5e1',
+                            400: '#94a3b8',
+                            500: '#64748b',
+                            600: '#475569',
+                            700: '#334155',
+                            800: '#1e293b',
+                            900: '#0f172a',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gradient-to-br from-neutral-50 to-neutral-200 min-h-screen">
+    <div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-md w-full space-y-8">
+            <!-- Header -->
+            <div class="text-center">
+                <h2 class="mt-6 text-3xl font-extrabold text-neutral-800">
+                    Create your account
+                </h2>
+                <p class="mt-2 text-sm text-neutral-600">
+                    Join Job Recommendation System Dashboard
+                </p>
+            </div>
+
+            <!-- Registration Form -->
+            <div class="bg-white py-8 px-6 shadow-2xl rounded-2xl border border-neutral-200">
+                <form method="POST" class="space-y-6">
+                    {{ form.hidden_tag() }}
+
+                    <!-- Username Field -->
+                    <div>
+                        <label for="username" class="block text-sm font-medium text-neutral-700">
+                            Username
+                        </label>
+                        <div class="mt-1">
+                            {{ form.username(class="appearance-none rounded-lg relative block w-full px-3 py-3 border border-neutral-300 placeholder-neutral-500 text-neutral-900 focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm", placeholder="Choose a username") }}
+                        </div>
+                        {% if form.username.errors %}
+                            <p class="mt-1 text-sm text-red-600">
+                                {{ form.username.errors[0] }}
+                            </p>
+                        {% endif %}
+                    </div>
+
+                    <!-- Email Field -->
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-neutral-700">
+                            Email Address
+                        </label>
+                        <div class="mt-1">
+                            {{ form.email(class="appearance-none rounded-lg relative block w-full px-3 py-3 border border-neutral-300 placeholder-neutral-500 text-neutral-900 focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm", placeholder="Enter your email") }}
+                        </div>
+                        {% if form.email.errors %}
+                            <p class="mt-1 text-sm text-red-600">
+                                {{ form.email.errors[0] }}
+                            </p>
+                        {% endif %}
+                    </div>
+
+                    <!-- Full Name Field -->
+                    <div>
+                        <label for="full_name" class="block text-sm font-medium text-neutral-700">
+                            Full Name
+                        </label>
+                        <div class="mt-1">
+                            {{ form.full_name(class="appearance-none rounded-lg relative block w-full px-3 py-3 border border-neutral-300 placeholder-neutral-500 text-neutral-900 focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm", placeholder="Enter your full name") }}
+                        </div>
+                        {% if form.full_name.errors %}
+                            <p class="mt-1 text-sm text-red-600">
+                                {{ form.full_name.errors[0] }}
+                            </p>
+                        {% endif %}
+                    </div>
+
+                    <!-- Role Field -->
+                    <div>
+                        <label for="role" class="block text-sm font-medium text-neutral-700">
+                            Role
+                        </label>
+                        <div class="mt-1">
+                            {{ form.role(class="appearance-none rounded-lg relative block w-full px-3 py-3 border border-neutral-300 text-neutral-900 focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm") }}
+                        </div>
+                    </div>
+
+                    <!-- Password Field -->
+                    <div>
+                        <label for="password" class="block text-sm font-medium text-neutral-700">
+                            Password
+                        </label>
+                        <div class="mt-1">
+                            {{ form.password(class="appearance-none rounded-lg relative block w-full px-3 py-3 border border-neutral-300 placeholder-neutral-500 text-neutral-900 focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm", placeholder="Create a password") }}
+                        </div>
+                        {% if form.password.errors %}
+                            <p class="mt-1 text-sm text-red-600">
+                                {{ form.password.errors[0] }}
+                            </p>
+                        {% endif %}
+                    </div>
+
+                    <!-- Confirm Password Field -->
+                    <div>
+                        <label for="password2" class="block text-sm font-medium text-neutral-700">
+                            Confirm Password
+                        </label>
+                        <div class="mt-1">
+                            {{ form.password2(class="appearance-none rounded-lg relative block w-full px-3 py-3 border border-neutral-300 placeholder-neutral-500 text-neutral-900 focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm", placeholder="Confirm your password") }}
+                        </div>
+                        {% if form.password2.errors %}
+                            <p class="mt-1 text-sm text-red-600">
+                                {{ form.password2.errors[0] }}
+                            </p>
+                        {% endif %}
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div>
+                        {{ form.submit(class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-gradient-to-r from-primary to-secondary hover:from-secondary hover:to-primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-all duration-200 shadow-md hover:shadow-lg") }}
+                    </div>
+                </form>
+
+                <!-- Login Link -->
+                <div class="mt-6 text-center">
+                    <p class="text-sm text-neutral-600">
+                        Already have an account?
+                        <a href="{{ url_for('login') }}" class="font-medium text-primary hover:text-secondary transition-colors">
+                            Sign in here
+                        </a>
+                    </p>
+                </div>
+
+                <!-- Back to Home Link -->
+                <div class="mt-4 text-center">
+                    <a href="{{ url_for('index') }}" class="text-sm text-neutral-500 hover:text-neutral-700 transition-colors">
+                        ← Back to Home
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success/Error Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="fixed top-4 right-4 z-50">
+                {% for category, message in messages %}
+                    <div class="{% if category == 'success' %}bg-green-100 border-green-400 text-green-700{% else %}bg-red-100 border-red-400 text-red-700{% endif %} px-4 py-3 rounded-lg shadow-md mb-2 border">
+                        <span class="block sm:inline">{{ message }}</span>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+</body>
+</html>

@@ -31,7 +31,7 @@
             </div>
             <div class="metric-card">
                 <h3>Dataset</h3>
-                <div class="metric-value">2,303</div>
+                <div class="metric-value">{{ "{:,}".format(total_records|int) }}</div>
                 <div class="metric-description">Training Samples</div>
             </div>
         </div>
@@ -112,7 +112,7 @@
                             </div>
                             <div class="stat-item">
                                 <div class="stat-label">Dataset Size</div>
-                                <div class="stat-value">2,303</div>
+                                <div class="stat-value">{{ "{:,}".format(total_records|int) }}</div>
                                 <div class="stat-desc">Training Samples</div>
                             </div>
                             <div class="stat-item">
@@ -124,7 +124,7 @@
 
                         <div class="analysis-insight">
                             <h4>✅ Model Improvement Applied!</h4>
-                            <p><strong>Peningkatan Signifikan:</strong> Dari 17.57% (13 kelas) → <strong>{{ "%.2f"|format(jurusan_accuracy * 100) }}%</strong> (8 kelas). Dataset ditingkatkan dari 198 → 2,303 samples dengan optimasi K-value hyperparameter (K=11). Class reduction dan data augmentation meningkatkan akurasi <strong>+188%</strong>!</p>
+                            <p><strong>Peningkatan Signifikan:</strong> Dari 17.57% (13 kelas) → <strong>{{ "%.2f"|format(jurusan_accuracy * 100) }}%</strong> (8 kelas). Dataset ditingkatkan dari 198 → {{ "{:,}".format(total_records|int) }} samples dengan optimasi K-value hyperparameter (K=11). Class reduction dan data augmentation meningkatkan akurasi <strong>+{{ "%.0f"|format((jurusan_accuracy * 100) - 17.57) }}%</strong>!</p>
                         </div>
 
                         <div class="improvement-suggestions">
@@ -134,7 +134,7 @@
                                     <div class="suggestion-icon">✅</div>
                                     <div class="suggestion-content">
                                         <h5>Data Training Increased</h5>
-                                        <p>2,303 samples (11x dari sebelumnya) untuk akurasi lebih baik</p>
+                                        <p>{{ "{:,}".format(total_records|int) }} samples (11x dari sebelumnya) untuk akurasi lebih baik</p>
                                     </div>
                                 </div>
                                 <div class="suggestion-card">
