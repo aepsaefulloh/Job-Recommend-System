@@ -1,0 +1,54 @@
+
+@startuml Diagram Aktivitas - Alur Survey Pengguna
+
+start
+
+:Pengguna mengakses halaman utama;
+
+:Tampilkan formulir survey;
+
+:Pengguna mengisi Bagian 1;
+note right: Informasi dasar (nama, email, jurusan, dll)
+
+if (Status bekerja?) then (Ya)
+    :Pengguna mengisi Bagian 2;
+    note right: Data pekerjaan
+else (Tidak)
+    :Pengguna mengisi Bagian 3;
+    note right: Data pengangguran
+endif
+
+:Kirim formulir;
+
+:Validasi data input;
+
+if (Valid?) then (Ya)
+    :Pra-pemrosesan data formulir;
+    :Encode fitur kategorikal;
+    :Skalakan fitur numerik;
+
+    :Muat model ML;
+    :Buat prediksi;
+    note right
+        - Jurusan cocok (8 kategori)
+        - Perusahaan tepat (2 kategori)
+    end note
+
+    :Generate rekomendasi;
+    :Tampilkan halaman hasil;
+
+    if (Simpan ke database?) then (Ya)
+        :Simpan data survey;
+        :Update statistik dashboard;
+    endif
+
+    :Tampilkan rekomendasi akhir;
+    stop
+
+else (Tidak)
+    :Tampilkan error validasi;
+    :Kembali ke formulir;
+    stop
+endif
+
+@enduml

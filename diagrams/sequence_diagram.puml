@@ -1,0 +1,48 @@
+
+@startuml Diagram Sekuens - Survey & Prediksi
+
+actor "Alumni SMK" as User
+participant "Aplikasi Flask" as Flask
+participant "predictor.py" as Predictor
+participant "Model ML" as ML
+participant "Database" as DB
+participant "Halaman Hasil" as Result
+
+== Pengiriman Survey ==
+User -> Flask: GET / (halaman utama)
+Flask --> User: formulir survey
+
+User -> Flask: POST /result (kirim survey)
+Flask -> Predictor: preprocess_form_data(form_data)
+
+Predictor -> Predictor: encode_features()
+Predictor -> ML: Muat model & scaler
+ML --> Predictor: Model dimuat
+
+Predictor -> ML: make_predictions()
+ML --> Predictor: hasil prediksi
+
+Predictor --> Flask: hasil prediksi
+
+Flask -> DB: Simpan survey (opsional)
+DB --> Flask: Data tersimpan
+
+Flask -> Result: Render result.html
+Result --> User: Tampilkan rekomendasi
+
+== Dashboard Admin ==
+actor "Administrator" as Admin
+Admin -> Flask: GET /login
+Flask --> Admin: formulir login
+
+Admin -> Flask: POST /login
+Flask -> DB: validasi kredensial
+DB --> Flask: pengguna terautentikasi
+
+Flask --> Admin: redirect ke /dashboard
+Admin -> Flask: GET /dashboard
+Flask -> DB: query survey_data & stats
+DB --> Flask: data dashboard
+Flask --> Admin: dashboard dengan grafik
+
+@enduml

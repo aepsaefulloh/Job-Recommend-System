@@ -1,0 +1,95 @@
+
+@startuml Diagram Kelas UML - Sistem Rekomendasi Pekerjaan
+
+class DataSurvey {
+    - id: int
+    - email: string
+    - nama: string
+    - tempat_tinggal: string
+    - jurusan: string
+    - status_bekerja: string
+    --
+    - profesi_sekarang: string
+    - jenis_perusahaan: string
+    - gaji: float
+    --
+    - jurusan_cocok: string
+    - perusahaan_tepat: string
+    --
+    - created_at: datetime
+    - updated_at: datetime
+    --
+    + simpan(): void
+    + update(): void
+    + hapus(): void
+    + dapatkan_rekomendasi(): list
+}
+
+class Pengguna {
+    - id: int
+    - username: string
+    - email: string
+    - password: string
+    - full_name: string
+    - role: string
+    - is_active: boolean
+    --
+    - created_at: datetime
+    - last_login: datetime
+    --
+    + set_password(password: string): void
+    + check_password(password: string): boolean
+    + login(): boolean
+    + logout(): void
+}
+
+class StatistikDashboard {
+    - id: int
+    - nama_statistik: string
+    - nilai_statistik: float
+    - tipe_statistik: string
+    - updated_at: datetime
+    --
+    + update(): void
+    + hitung(): float
+    + dapatkan_nilai(): float
+}
+
+class Prediktor {
+    - knn_jurusan: KNeighborsClassifier
+    - knn_perusahaan: KNeighborsClassifier
+    - scaler: StandardScaler
+    - label_encoders: dict
+    --
+    + preprocess_form_data(form_data: dict): dict
+    + encode_features(data: dict): array
+    + make_predictions(data: dict): dict
+    + load_models(): boolean
+}
+
+class ModelKNN {
+    - n_neighbors: int
+    - weights: string
+    - metric: string
+    --
+    + fit(X, y): void
+    + predict(X): array
+    + predict_proba(X): array
+}
+
+' Relasi
+DataSurvey "1" -- "*" Pengguna : dimiliki oleh
+StatistikDashboard "*" -- "1" DataSurvey : dihitung dari
+Prediktor --> DataSurvey : menggunakan
+Prediktor --> ModelKNN : berisi
+Pengguna --> StatistikDashboard : akses admin
+
+' Interface
+interface "ModelML" {
+    + fit(X, y): void
+    + predict(X): array
+}
+
+ModelKNN ..|> ModelML : mengimplementasi
+
+@enduml

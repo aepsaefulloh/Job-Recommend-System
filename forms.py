@@ -39,7 +39,22 @@ class SurveyFilterForm(FlaskForm):
     """Form for filtering survey data in dashboard"""
     status_bekerja = SelectField('Status Bekerja',
                                 choices=[('', 'All'), ('Ya', 'Sudah Bekerja'), ('Tidak', 'Belum Bekerja')])
-    jurusan = SelectField('Jurusan', choices=[('', 'All')])
-    tempat_tinggal = SelectField('Tempat Tinggal', choices=[('', 'All')])
-    jenis_perusahaan = SelectField('Jenis Perusahaan', choices=[('', 'All')])
+    jurusan = SelectField('Jurusan', 
+                         choices=[('', 'All'), 
+                                ('Akuntansi', 'Akuntansi'), 
+                                ('Perkantoran', 'Perkantoran'), 
+                                ('Pemasaran', 'Pemasaran')])
+    tempat_tinggal = SelectField('Tempat Tinggal', 
+                                choices=[('', 'All'), 
+                                       ('Jakarta', 'Jakarta'), 
+                                       ('Depok', 'Depok'), 
+                                       ('Tangerang Selatan', 'Tangerang Selatan'), 
+                                       ('Tangerang', 'Tangerang'), 
+                                       ('Bekasi', 'Bekasi')])
+    jenis_perusahaan = SelectField('Jenis Perusahaan', 
+                                  choices=[('', 'All'), 
+                                         ('BUMN', 'BUMN'), 
+                                         ('PNS', 'PNS'), 
+                                         ('Perusahaan Swasta', 'Perusahaan Swasta'), 
+                                         ('Wirausaha', 'Wirausaha')])
     submit = SubmitField('Filter')
