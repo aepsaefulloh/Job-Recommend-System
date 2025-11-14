@@ -70,7 +70,8 @@ def preprocess_form_data(form_data, label_encoders):
         tempat_kerja = form_data.get('tempat_kerja_saat_ini', tempat_tinggal)
         
         # Get kepuasan
-        kepuasan = form_data.get('kepuasan', 'Puas')
+        kepuasan_value = form_data.get('kepuasan', '').strip()
+        kepuasan = kepuasan_value if kepuasan_value else 'Puas'
         
         # Get lama kerja
         lama_kerja_str = form_data.get('lama_kerja', '0')
@@ -92,7 +93,8 @@ def preprocess_form_data(form_data, label_encoders):
         kemudahan_cari_kerja = form_data.get('kemudahan_cari_kerja', 'Mudah')
         bantuan_sekolah = form_data.get('bantuan_sekolah', 'Tidak')
         kesesuaian_minat = form_data.get('kesesuaian_minat', 'Sesuai')
-        jenis_perusahaan = form_data.get('jenis_perusahaan', 'Perusahaan Swasta')
+        jenis_perusahaan_value = form_data.get('jenis_perusahaan', '').strip()
+        jenis_perusahaan = jenis_perusahaan_value if jenis_perusahaan_value else 'Perusahaan Swasta'
         kesesuaian_jurusan = form_data.get('kesesuaian_jurusan', 'Ya')
         rencana_pindah_kerja = form_data.get('rencana_pindah_kerja', 'Tidak')
     

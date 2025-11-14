@@ -40,6 +40,64 @@ def load_survey_data():
         print(f"Error loading survey data: {e}")
         return None
 
+def update_dashboard_stats():
+    """Update dashboard statistics after new survey submission"""
+    try:
+        # Get total survey count
+        total_surveys = SurveyData.query.count()
+
+        # Get employed vs unemployed count
+        employed_count = SurveyData.query.filter_by(status_bekerja='Ya').count()
+        unemployed_count = SurveyData.query.filter_by(status_bekerja='Tidak').count()
+
+        # Get major distribution
+        major_stats = db.session.query(
+            SurveyData.jurusan,
+            func.count(SurveyData.jurusan).label('count')
+        ).group_by(SurveyData.jurusan).all()
+
+        # Get location distribution
+        location_stats = db.session.query(
+            SurveyData.tempat_tinggal,
+            func.count(SurveyData.tempat_tinggal).label('count')
+        ).group_by(SurveyData.tempat_tinggal).all()
+
+        # Get company type distribution
+        company_stats = db.session.query(
+            SurveyData.jenis_perusahaan,
+            func.count(SurveyData.jenis_perusahaan).label('count')
+        ).filter(SurveyData.jenis_perusahaan.isnot(None)).group_by(SurveyData.jenis_perusahaan).all()
+
+        # Update or create dashboard stats
+        stats_to_update = {
+            'total_surveys': total_surveys,
+            'employed_count': employed_count,
+            'unemployed_count': unemployed_count,
+            'employment_rate': (employed_count / total_surveys * 100) if total_surveys > 0 else 0,
+            'top_major': major_stats[0][0] if major_stats else 'N/A',
+            'top_location': location_stats[0][0] if location_stats else 'N/A',
+            'top_company_type': company_stats[0][0] if company_stats else 'N/A'
+        }
+
+        for stat_name, stat_value in stats_to_update.items():
+            stat_record = DashboardStats.query.filter_by(stat_name=stat_name).first()
+            if stat_record:
+                stat_record.stat_value = stat_value
+            else:
+                stat_record = DashboardStats(
+                    stat_name=stat_name,
+                    stat_value=stat_value,
+                    stat_type='count' if isinstance(stat_value, int) else 'percentage'
+                )
+                db.session.add(stat_record)
+
+        db.session.commit()
+        print(f"✅ Dashboard statistics updated: {stats_to_update}")
+
+    except Exception as e:
+        print(f"❌ Error updating dashboard stats: {e}")
+        db.session.rollback()
+
 def calculate_dynamic_metrics():
     """Calculate model metrics dynamically from job_survey.csv"""
     try:
@@ -145,7 +203,7 @@ def register():
             username=form.username.data,
             email=form.email.data,
             full_name=form.full_name.data,
-            role=form.role.data
+            role='viewer'
         )
         user.set_password(form.password.data)
         db.session.add(user)
@@ -171,36 +229,63 @@ def dashboard():
     per_page = 25
 
     # Get filter parameters
+    search_query = request.args.get('search', '')
     status_filter = request.args.get('status_bekerja', '')
     jurusan_filter = request.args.get('jurusan', '')
     location_filter = request.args.get('tempat_tinggal', '')
     company_filter = request.args.get('jenis_perusahaan', '')
 
-    # Build query with filters
-    query = SurveyData.query
+    # Initialize variables
+    surveys = []
+    pagination = None
+    users = []
+    user_pagination = None
 
-    if status_filter:
-        query = query.filter_by(status_bekerja=status_filter)
-    if jurusan_filter:
-        query = query.filter_by(jurusan=jurusan_filter)
-    if location_filter:
-        query = query.filter_by(tempat_tinggal=location_filter)
-    if company_filter:
-        query = query.filter(SurveyData.jenis_perusahaan == company_filter)
+    # Role-based access control (admin and viewer can see data)
+    if current_user.role in ['admin', 'viewer']:
+        # Admin can see all survey data
+        # Build query with filters
+        query = SurveyData.query
 
-    # Get paginated results
-    pagination = query.order_by(SurveyData.created_at.desc()).paginate(
-        page=page, per_page=per_page, error_out=False
-    )
-    surveys = pagination.items
+        # Search filter (nama or email)
+        if search_query:
+            query = query.filter(
+                db.or_(
+                    SurveyData.nama.ilike(f'%{search_query}%'),
+                    SurveyData.email.ilike(f'%{search_query}%')
+                )
+            )
 
-    # Get dashboard statistics
+        if status_filter:
+            query = query.filter_by(status_bekerja=status_filter)
+        if jurusan_filter:
+            query = query.filter_by(jurusan=jurusan_filter)
+        if location_filter:
+            query = query.filter_by(tempat_tinggal=location_filter)
+        if company_filter:
+            query = query.filter(SurveyData.jenis_perusahaan == company_filter)
+
+        # Get paginated results
+        pagination = query.order_by(SurveyData.created_at.desc()).paginate(
+            page=page, per_page=per_page, error_out=False
+        )
+        surveys = pagination.items
+
+    # Get all users for admin management (admin only)
+    if current_user.role == 'admin':
+        user_page = request.args.get('user_page', 1, type=int)
+        user_pagination = User.query.order_by(User.created_at.desc()).paginate(
+            page=user_page, per_page=10, error_out=False
+        )
+        users = user_pagination.items
+
+    # Get dashboard statistics (available to all users)
     stats = {}
     dashboard_stats = DashboardStats.query.all()
     for stat in dashboard_stats:
         stats[stat.stat_name] = stat.stat_value
 
-    # Get chart data
+    # Get chart data (available to all users)
     major_data = db.session.query(
         SurveyData.jurusan,
         func.count(SurveyData.jurusan).label('count')
@@ -216,17 +301,20 @@ def dashboard():
         func.count(SurveyData.jenis_perusahaan).label('count')
     ).filter(SurveyData.jenis_perusahaan.isnot(None)).group_by(SurveyData.jenis_perusahaan).order_by(desc('count')).limit(5).all()
 
-    # Prepare filter form
-    filter_form = SurveyFilterForm()
-    filter_form.status_bekerja.data = status_filter
-    filter_form.jurusan.data = jurusan_filter
-    filter_form.tempat_tinggal.data = location_filter
-    filter_form.jenis_perusahaan.data = company_filter
+    # Prepare filter form (available for admin and viewer)
+    filter_form = None
+    if current_user.role in ['admin', 'viewer']:
+        filter_form = SurveyFilterForm()
+        filter_form.search.data = search_query
+        filter_form.status_bekerja.data = status_filter
+        filter_form.jurusan.data = jurusan_filter
+        filter_form.tempat_tinggal.data = location_filter
+        filter_form.jenis_perusahaan.data = company_filter
 
-    # Populate filter choices
-    filter_form.jurusan.choices = [('', 'All')] + [(m[0], m[0]) for m in major_data]
-    filter_form.tempat_tinggal.choices = [('', 'All')] + [(l[0], l[0]) for l in location_data]
-    filter_form.jenis_perusahaan.choices = [('', 'All')] + [(c[0], c[0]) for c in company_data]
+        # Populate filter choices
+        filter_form.jurusan.choices = [('', 'All')] + [(m[0], m[0]) for m in major_data]
+        filter_form.tempat_tinggal.choices = [('', 'All')] + [(l[0], l[0]) for l in location_data]
+        filter_form.jenis_perusahaan.choices = [('', 'All')] + [(c[0], c[0]) for c in company_data]
 
     # Create filtered request args (exclude 'page' to avoid conflicts in pagination)
     filtered_args = {k: v for k, v in request.args.items() if k != 'page'}
@@ -234,6 +322,8 @@ def dashboard():
     return render_template('dashboard.html',
                          surveys=surveys,
                          pagination=pagination,
+                         users=users,
+                         user_pagination=user_pagination,
                          stats=stats,
                          filter_form=filter_form,
                          filtered_args=filtered_args,
@@ -243,6 +333,124 @@ def dashboard():
                          location_data=[l[1] for l in location_data],
                          company_labels=[c[0] for c in company_data],
                          company_data=[c[1] for c in company_data])
+
+@app.route('/update_user_role/<int:user_id>', methods=['POST'])
+@login_required
+def update_user_role(user_id):
+    """Update user role (admin only)"""
+    if current_user.role != 'admin':
+        flash('Access denied. Admin privileges required.', 'error')
+        return redirect(url_for('dashboard'))
+
+    user = User.query.get_or_404(user_id)
+    new_role = request.form.get('role')
+
+    if new_role not in ['viewer', 'admin']:
+        flash('Invalid role specified.', 'error')
+        return redirect(url_for('dashboard'))
+
+    user.role = new_role
+    db.session.commit()
+
+    flash(f'User {user.username} role updated to {new_role}.', 'success')
+    return redirect(url_for('dashboard'))
+
+@app.route('/export_excel')
+@login_required
+def export_excel():
+    """Export survey data to Excel (admin only)"""
+    if current_user.role != 'admin':
+        flash('Access denied. Admin privileges required.', 'error')
+        return redirect(url_for('dashboard'))
+
+    try:
+        import pandas as pd
+        from io import BytesIO
+        from flask import send_file
+
+        # Get all survey data
+        surveys = SurveyData.query.order_by(SurveyData.created_at.desc()).all()
+
+        # Convert to dictionary list
+        data = []
+        for survey in surveys:
+            data.append({
+                'ID': survey.id,
+                'Email': survey.email,
+                'Nama': survey.nama,
+                'Tempat Tinggal': survey.tempat_tinggal,
+                'Jurusan': survey.jurusan,
+                'Status Bekerja': survey.status_bekerja,
+                'Profesi Sekarang': survey.profesi_sekarang,
+                'Tempat Kerja': survey.tempat_kerja,
+                'Cara Mendapat Pekerjaan': survey.cara_mendapat_pekerjaan,
+                'Kemudahan Cari Kerja': survey.kemudahan_cari_kerja,
+                'Bantuan Sekolah': survey.bantuan_sekolah,
+                'Kesesuaian Minat': survey.kesesuaian_minat,
+                'Waktu Kerja Pertama (Tahun)': survey.waktu_kerja_pertama,
+                'Jenis Perusahaan': survey.jenis_perusahaan,
+                'Kesesuaian Jurusan': survey.kesesuaian_jurusan,
+                'Kepuasan': survey.kepuasan,
+                'Rencana Pindah Kerja': survey.rencana_pindah_kerja,
+                'Lama Kerja 1': survey.lama_kerja_1,
+                'Lama Kerja 2': survey.lama_kerja_2,
+                'Nyaman': survey.nyaman,
+                'Gaji Kategori': survey.gaji_kategori,
+                'Gaji': survey.gaji,
+                'Alasan Belum Kerja': survey.alasan_belum_kerja,
+                'Rencana Kerja Sesuai Jurusan': survey.rencana_kerja_sesuai_jurusan,
+                'Kendala Utama': survey.kendala_utama,
+                'Ikut Pelatihan': survey.ikut_pelatihan,
+                'Gunakan Platform Online': survey.gunakan_platform_online,
+                'Kepercayaan Keterampilan': survey.kepercayaan_keterampilan,
+                'Bersedia Rekomendasi Sekolah': survey.bersedia_rekomendasi_sekolah,
+                'Jurusan Cocok (Prediksi)': survey.jurusan_cocok,
+                'Perusahaan Tepat (Prediksi)': survey.perusahaan_tepat,
+                'Dibuat Pada': survey.created_at.strftime('%Y-%m-%d %H:%M:%S') if survey.created_at else ''
+            })
+
+        # Create DataFrame
+        df = pd.DataFrame(data)
+
+        # Create Excel file in memory
+        output = BytesIO()
+        with pd.ExcelWriter(output, engine='openpyxl') as writer:
+            df.to_excel(writer, index=False, sheet_name='Survey Data')
+            
+            # Auto-adjust column width
+            worksheet = writer.sheets['Survey Data']
+            for column in worksheet.columns:
+                max_length = 0
+                column_letter = column[0].column_letter
+                for cell in column:
+                    try:
+                        if len(str(cell.value)) > max_length:
+                            max_length = len(str(cell.value))
+                    except:
+                        pass
+                adjusted_width = min(max_length + 2, 50)
+                worksheet.column_dimensions[column_letter].width = adjusted_width
+
+        output.seek(0)
+
+        # Generate filename with timestamp
+        from datetime import datetime
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        filename = f'survey_data_{timestamp}.xlsx'
+
+        return send_file(
+            output,
+            mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            as_attachment=True,
+            download_name=filename
+        )
+
+    except ImportError:
+        flash('Excel export requires pandas and openpyxl. Please install: pip install pandas openpyxl', 'error')
+        return redirect(url_for('dashboard'))
+    except Exception as e:
+        flash(f'Error exporting data: {str(e)}', 'error')
+        return redirect(url_for('dashboard'))
 
 # ============= EXISTING ROUTES =============
 
@@ -270,20 +478,21 @@ def result():
             jurusan=processed_data['jurusan'],
             status_bekerja=processed_data['status_bekerja'],
             profesi_sekarang=processed_data.get('profesi_sekarang'),
-            tempat_kerja=processed_data.get('tempat_kerja'),
+            tempat_kerja=processed_data.get('tempat_kerja'),  # Fixed: use processed_data key
             cara_mendapat_pekerjaan=processed_data.get('cara_mendapat_pekerjaan'),
-            kemudahan_cari_kerja=processed_data.get('kemudahan_cari_kerja'),
-            bantuan_sekolah=processed_data.get('bantuan_sekolah'),
+            kemudahan_cari_kerja=processed_data.get('kemudahan_cari_kerja') or processed_data.get('kemudahan_cari_kerja_belum'),
+            bantuan_sekolah=processed_data.get('bantuan_sekolah') or processed_data.get('bantuan_sekolah_belum'),
             kesesuaian_minat=processed_data.get('kesesuaian_minat'),
             waktu_kerja_pertama=processed_data.get('waktu_kerja_pertama'),
             jenis_perusahaan=processed_data.get('jenis_perusahaan'),
             kesesuaian_jurusan=processed_data.get('kesesuaian_jurusan'),
             kepuasan=processed_data.get('kepuasan'),
             rencana_pindah_kerja=processed_data.get('rencana_pindah_kerja'),
-            lama_kerja_1=processed_data.get('lama_kerja_1'),
-            lama_kerja_2=processed_data.get('lama_kerja_2'),
-            nyaman=processed_data.get('nyaman'),
-            gaji=processed_data.get('gaji'),
+            lama_kerja_1=processed_data.get('lama_kerja_1'),  # Fixed: use processed_data key
+            lama_kerja_2=processed_data.get('lama_kerja_2'),  # Added: total experience
+            nyaman=processed_data.get('nyaman'),  # Fixed: use processed_data key
+            gaji_kategori=request.form.get('gaji'),  # Fixed: use request.form instead of form_data
+            gaji=processed_data.get('gaji'),  # Numeric salary value
             alasan_belum_kerja=processed_data.get('alasan_belum_kerja'),
             rencana_kerja_sesuai_jurusan=processed_data.get('rencana_kerja_sesuai_jurusan'),
             kendala_utama=processed_data.get('kendala_utama'),
@@ -297,6 +506,9 @@ def result():
 
         db.session.add(survey_record)
         db.session.commit()
+
+        # Update dashboard statistics
+        update_dashboard_stats()
 
         # Render results
         return render_template('result.html',
@@ -392,7 +604,30 @@ def visualize():
     except Exception as e:
         return f"Error generating visualizations: {str(e)}", 500
 
+# Create admin user if not exists
+def create_admin_user():
+    """Create default admin user if no users exist"""
+    if User.query.count() == 0:
+        admin_user = User(
+            username='admin',
+            email='admin@admin.com',
+            full_name='Administrator',
+            role='admin'
+        )
+        admin_user.set_password('admin123')
+        db.session.add(admin_user)
+        db.session.commit()
+        print("✅ Default admin user created:")
+        print("   Username: admin")
+        print("   Password: admin123")
+        print("   Please change the password after first login!")
+
 if __name__ == '__main__':
+    # Create all database tables
+    with app.app_context():
+        db.create_all()
+        create_admin_user()
+
     print("\n" + "="*60)
     print("JOB RECOMMENDATION SYSTEM WITH DASHBOARD")
     print("="*60)

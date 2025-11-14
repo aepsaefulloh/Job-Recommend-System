@@ -21,8 +21,6 @@ class RegistrationForm(FlaskForm):
     full_name = StringField('Full Name', validators=[DataRequired(), Length(min=2, max=100)])
     password = PasswordField('Password', validators=[DataRequired(), Length(min=6)])
     password2 = PasswordField('Repeat Password', validators=[DataRequired(), EqualTo('password')])
-    role = SelectField('Role', choices=[('user', 'User'), ('admin', 'Administrator')],
-                       default='user', validators=[DataRequired()])
     submit = SubmitField('Register')
 
     def validate_username(self, username):
@@ -37,6 +35,7 @@ class RegistrationForm(FlaskForm):
 
 class SurveyFilterForm(FlaskForm):
     """Form for filtering survey data in dashboard"""
+    search = StringField('Search (Nama/Email)', validators=[Length(max=100)])
     status_bekerja = SelectField('Status Bekerja',
                                 choices=[('', 'All'), ('Ya', 'Sudah Bekerja'), ('Tidak', 'Belum Bekerja')])
     jurusan = SelectField('Jurusan', 
