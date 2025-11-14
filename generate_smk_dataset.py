@@ -12,7 +12,7 @@ from datetime import datetime
 np.random.seed(42)
 
 # Untuk jumlah data yang di-generate
-n_samples = 7000
+n_samples = 708
 
 print("🚀 Generating SMK Survey Dataset...")
 print(f"📊 Creating {n_samples} records with 28+ fields")
