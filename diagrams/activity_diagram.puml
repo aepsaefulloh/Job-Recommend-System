@@ -1,53 +1,53 @@
 
-@startuml Diagram Aktivitas - Alur Survey Pengguna
+@startuml Activity Diagram - User Survey Flow
 
 start
 
-:Pengguna mengakses halaman utama;
+:User accesses homepage;
 
-:Tampilkan formulir survey;
+:Display survey form;
 
-:Pengguna mengisi Bagian 1;
-note right: Informasi dasar (nama, email, jurusan, dll)
+:User fills Section 1;
+note right: Basic information (name, email, major, etc)
 
-if (Status bekerja?) then (Ya)
-    :Pengguna mengisi Bagian 2;
-    note right: Data pekerjaan
-else (Tidak)
-    :Pengguna mengisi Bagian 3;
-    note right: Data pengangguran
+if (Currently Working?) then (Yes)
+    :User fills Section 2;
+    note right: Employment data
+else (No)
+    :User fills Section 3;
+    note right: Unemployment data
 endif
 
-:Kirim formulir;
+:Submit form;
 
-:Validasi data input;
+:Validate input data;
 
-if (Valid?) then (Ya)
-    :Pra-pemrosesan data formulir;
-    :Encode fitur kategorikal;
-    :Skalakan fitur numerik;
+if (Valid?) then (Yes)
+    :Preprocess form data;
+    :Encode categorical features;
+    :Scale numerical features;
 
-    :Muat model ML;
-    :Buat prediksi;
+    :Load ML model;
+    :Make predictions;
     note right
-        - Jurusan cocok (8 kategori)
-        - Perusahaan tepat (2 kategori)
+        - Suitable major (8 categories)
+        - Company type (2 categories)
     end note
 
-    :Generate rekomendasi;
-    :Tampilkan halaman hasil;
+    :Generate recommendations;
+    :Display result page;
 
-    if (Simpan ke database?) then (Ya)
-        :Simpan data survey;
-        :Update statistik dashboard;
+    if (Save to database?) then (Yes)
+        :Save survey data;
+        :Update dashboard statistics;
     endif
 
-    :Tampilkan rekomendasi akhir;
+    :Show final recommendations;
     stop
 
-else (Tidak)
-    :Tampilkan error validasi;
-    :Kembali ke formulir;
+else (No)
+    :Display validation errors;
+    :Return to form;
     stop
 endif
 

@@ -15,13 +15,13 @@ class DiagramGenerator:
         self.output_dir.mkdir(exist_ok=True)
 
     def generate_erd_plantuml(self):
-        """Generate ERD menggunakan PlantUML dalam bahasa Indonesia"""
+        """Generate ERD using PlantUML with standard English terminology"""
 
         plantuml_code = """
-@startuml Diagram ERD - Sistem Rekomendasi Pekerjaan
+@startuml ERD - Job Recommendation System
 
-' Entitas
-entity "DATA_SURVEY" as survey {
+' Entities
+entity "SURVEY_DATA" as survey {
     + id : INT <<PK>>
     --
     email : VARCHAR(120) <<UK>>
@@ -42,7 +42,7 @@ entity "DATA_SURVEY" as survey {
     updated_at : DATETIME
 }
 
-entity "PENGGUNA" as users {
+entity "USERS" as users {
     + id : INT <<PK>>
     --
     username : VARCHAR(80) <<UK>>
@@ -56,24 +56,24 @@ entity "PENGGUNA" as users {
     last_login : DATETIME
 }
 
-entity "STATISTIK_DASHBOARD" as stats {
+entity "DASHBOARD_STATS" as stats {
     + id : INT <<PK>>
     --
-    nama_statistik : VARCHAR(50) <<UK>>
-    nilai_statistik : FLOAT
-    tipe_statistik : VARCHAR(20)
+    stat_name : VARCHAR(50) <<UK>>
+    stat_value : FLOAT
+    stat_type : VARCHAR(20)
     --
     updated_at : DATETIME
 }
 
-' Relasi
-survey ||..o{ users : "dimiliki oleh"
-stats ||..o{ survey : "dihitung dari"
-users ||..o{ stats : "akses admin"
+' Relationships
+survey ||..o{ users : "owned by"
+stats ||..o{ survey : "calculated from"
+users ||..o{ stats : "admin access"
 
-' Legenda
+' Legend
 legend right
-    |= Simbol |= Arti |
+    |= Symbol |= Meaning |
     | PK | Primary Key |
     | UK | Unique Key |
     | FK | Foreign Key |
@@ -90,58 +90,58 @@ endlegend
         return output_file
 
     def generate_activity_diagram_plantuml(self):
-        """Generate Activity Diagram menggunakan PlantUML dalam bahasa Indonesia"""
+        """Generate Activity Diagram using PlantUML with standard English terminology"""
 
         plantuml_code = """
-@startuml Diagram Aktivitas - Alur Survey Pengguna
+@startuml Activity Diagram - User Survey Flow
 
 start
 
-:Pengguna mengakses halaman utama;
+:User accesses homepage;
 
-:Tampilkan formulir survey;
+:Display survey form;
 
-:Pengguna mengisi Bagian 1;
-note right: Informasi dasar (nama, email, jurusan, dll)
+:User fills Section 1;
+note right: Basic information (name, email, major, etc)
 
-if (Status bekerja?) then (Ya)
-    :Pengguna mengisi Bagian 2;
-    note right: Data pekerjaan
-else (Tidak)
-    :Pengguna mengisi Bagian 3;
-    note right: Data pengangguran
+if (Currently Working?) then (Yes)
+    :User fills Section 2;
+    note right: Employment data
+else (No)
+    :User fills Section 3;
+    note right: Unemployment data
 endif
 
-:Kirim formulir;
+:Submit form;
 
-:Validasi data input;
+:Validate input data;
 
-if (Valid?) then (Ya)
-    :Pra-pemrosesan data formulir;
-    :Encode fitur kategorikal;
-    :Skalakan fitur numerik;
+if (Valid?) then (Yes)
+    :Preprocess form data;
+    :Encode categorical features;
+    :Scale numerical features;
 
-    :Muat model ML;
-    :Buat prediksi;
+    :Load ML model;
+    :Make predictions;
     note right
-        - Jurusan cocok (8 kategori)
-        - Perusahaan tepat (2 kategori)
+        - Suitable major (8 categories)
+        - Company type (2 categories)
     end note
 
-    :Generate rekomendasi;
-    :Tampilkan halaman hasil;
+    :Generate recommendations;
+    :Display result page;
 
-    if (Simpan ke database?) then (Ya)
-        :Simpan data survey;
-        :Update statistik dashboard;
+    if (Save to database?) then (Yes)
+        :Save survey data;
+        :Update dashboard statistics;
     endif
 
-    :Tampilkan rekomendasi akhir;
+    :Show final recommendations;
     stop
 
-else (Tidak)
-    :Tampilkan error validasi;
-    :Kembali ke formulir;
+else (No)
+    :Display validation errors;
+    :Return to form;
     stop
 endif
 
@@ -156,54 +156,54 @@ endif
         return output_file
 
     def generate_sequence_diagram_plantuml(self):
-        """Generate Sequence Diagram menggunakan PlantUML dalam bahasa Indonesia"""
+        """Generate Sequence Diagram using PlantUML with standard English terminology"""
 
         plantuml_code = """
-@startuml Diagram Sekuens - Survey & Prediksi
+@startuml Sequence Diagram - Survey & Prediction
 
-actor "Alumni SMK" as User
-participant "Aplikasi Flask" as Flask
+actor "SMK Alumni" as User
+participant "Flask App" as Flask
 participant "predictor.py" as Predictor
-participant "Model ML" as ML
+participant "ML Model" as ML
 participant "Database" as DB
-participant "Halaman Hasil" as Result
+participant "Result Page" as Result
 
-== Pengiriman Survey ==
-User -> Flask: GET / (halaman utama)
-Flask --> User: formulir survey
+== Survey Submission ==
+User -> Flask: GET / (homepage)
+Flask --> User: survey form
 
-User -> Flask: POST /result (kirim survey)
+User -> Flask: POST /result (submit survey)
 Flask -> Predictor: preprocess_form_data(form_data)
 
 Predictor -> Predictor: encode_features()
-Predictor -> ML: Muat model & scaler
-ML --> Predictor: Model dimuat
+Predictor -> ML: Load model & scaler
+ML --> Predictor: Model loaded
 
 Predictor -> ML: make_predictions()
-ML --> Predictor: hasil prediksi
+ML --> Predictor: prediction results
 
-Predictor --> Flask: hasil prediksi
+Predictor --> Flask: prediction results
 
-Flask -> DB: Simpan survey (opsional)
-DB --> Flask: Data tersimpan
+Flask -> DB: Save survey (optional)
+DB --> Flask: Data saved
 
 Flask -> Result: Render result.html
-Result --> User: Tampilkan rekomendasi
+Result --> User: Display recommendations
 
-== Dashboard Admin ==
+== Admin Dashboard ==
 actor "Administrator" as Admin
 Admin -> Flask: GET /login
-Flask --> Admin: formulir login
+Flask --> Admin: login form
 
 Admin -> Flask: POST /login
-Flask -> DB: validasi kredensial
-DB --> Flask: pengguna terautentikasi
+Flask -> DB: validate credentials
+DB --> Flask: user authenticated
 
-Flask --> Admin: redirect ke /dashboard
+Flask --> Admin: redirect to /dashboard
 Admin -> Flask: GET /dashboard
 Flask -> DB: query survey_data & stats
-DB --> Flask: data dashboard
-Flask --> Admin: dashboard dengan grafik
+DB --> Flask: dashboard data
+Flask --> Admin: dashboard with charts
 
 @enduml
 """
@@ -216,12 +216,12 @@ Flask --> Admin: dashboard dengan grafik
         return output_file
 
     def generate_uml_class_diagram_plantuml(self):
-        """Generate UML Class Diagram menggunakan PlantUML dalam bahasa Indonesia"""
+        """Generate UML Class Diagram using PlantUML with standard English terminology"""
 
         plantuml_code = """
-@startuml Diagram Kelas UML - Sistem Rekomendasi Pekerjaan
+@startuml UML Class Diagram - Job Recommendation System
 
-class DataSurvey {
+class SurveyData {
     - id: int
     - email: string
     - nama: string
@@ -239,13 +239,13 @@ class DataSurvey {
     - created_at: datetime
     - updated_at: datetime
     --
-    + simpan(): void
+    + save(): void
     + update(): void
-    + hapus(): void
-    + dapatkan_rekomendasi(): list
+    + delete(): void
+    + get_recommendations(): list
 }
 
-class Pengguna {
+class User {
     - id: int
     - username: string
     - email: string
@@ -263,19 +263,19 @@ class Pengguna {
     + logout(): void
 }
 
-class StatistikDashboard {
+class DashboardStats {
     - id: int
-    - nama_statistik: string
-    - nilai_statistik: float
-    - tipe_statistik: string
+    - stat_name: string
+    - stat_value: float
+    - stat_type: string
     - updated_at: datetime
     --
     + update(): void
-    + hitung(): float
-    + dapatkan_nilai(): float
+    + calculate(): float
+    + get_value(): float
 }
 
-class Prediktor {
+class Predictor {
     - knn_jurusan: KNeighborsClassifier
     - knn_perusahaan: KNeighborsClassifier
     - scaler: StandardScaler
@@ -287,7 +287,7 @@ class Prediktor {
     + load_models(): boolean
 }
 
-class ModelKNN {
+class KNNModel {
     - n_neighbors: int
     - weights: string
     - metric: string
@@ -297,20 +297,20 @@ class ModelKNN {
     + predict_proba(X): array
 }
 
-' Relasi
-DataSurvey "1" -- "*" Pengguna : dimiliki oleh
-StatistikDashboard "*" -- "1" DataSurvey : dihitung dari
-Prediktor --> DataSurvey : menggunakan
-Prediktor --> ModelKNN : berisi
-Pengguna --> StatistikDashboard : akses admin
+' Relationships
+SurveyData "1" -- "*" User : owned by
+DashboardStats "*" -- "1" SurveyData : calculated from
+Predictor --> SurveyData : uses
+Predictor --> KNNModel : contains
+User --> DashboardStats : admin access
 
 ' Interface
-interface "ModelML" {
+interface "MLModel" {
     + fit(X, y): void
     + predict(X): array
 }
 
-ModelKNN ..|> ModelML : mengimplementasi
+KNNModel ..|> MLModel : implements
 
 @enduml
 """
@@ -323,61 +323,61 @@ ModelKNN ..|> ModelML : mengimplementasi
         return output_file
 
     def generate_use_case_diagram_plantuml(self):
-        """Generate Use Case Diagram menggunakan PlantUML dalam bahasa Indonesia"""
+        """Generate Use Case Diagram using PlantUML with standard English terminology"""
 
         plantuml_code = """
-@startuml Diagram Use Case - Sistem Rekomendasi Pekerjaan
+@startuml Use Case Diagram - Job Recommendation System
 
 left to right direction
 
-actor "Alumni SMK" as Alumni
+actor "SMK Alumni" as Alumni
 actor "Administrator" as Admin
 
-rectangle "Sistem Rekomendasi Pekerjaan" {
-    usecase "UC-001: Mengisi Survey Pekerjaan" as UC1
-    usecase "UC-002: Melihat Hasil Rekomendasi" as UC2
-    usecase "UC-003: Login ke Dashboard" as UC3
-    usecase "UC-004: Melihat Analitik Dashboard" as UC4
-    usecase "UC-005: Filter Data Survey" as UC5
+rectangle "Job Recommendation System" {
+    usecase "UC-001: Fill Job Survey" as UC1
+    usecase "UC-002: View Recommendations" as UC2
+    usecase "UC-003: Login to Dashboard" as UC3
+    usecase "UC-004: View Dashboard Analytics" as UC4
+    usecase "UC-005: Filter Survey Data" as UC5
     usecase "UC-006: Export Data" as UC6
 }
 
-' Use case Alumni
+' Alumni use cases
 Alumni --> UC1
 Alumni --> UC2
 
-' Use case Admin
+' Admin use cases
 Admin --> UC3
 Admin --> UC4
 Admin --> UC5
 Admin --> UC6
 
-' Relasi Include
+' Include relationships
 UC1 ..> UC2 : <<include>>
 
-' Relasi Extend
+' Extend relationships
 UC4 ..> UC5 : <<extend>>
 UC4 ..> UC6 : <<extend>>
 
-' Generalisasi
-Admin --|> Alumni : mewarisi
+' Generalization
+Admin --|> Alumni : inherits
 
 note right of UC1
-    **Prasyarat:**
-    Pengguna belum login
+    **Precondition:**
+    User not logged in
 
-    **Pasca-kondisi:**
-    Mendapat rekomendasi
-    pekerjaan
+    **Postcondition:**
+    Receives job
+    recommendations
 end note
 
 note right of UC4
-    **Prasyarat:**
-    Admin sudah login
+    **Precondition:**
+    Admin logged in
 
-    **Pasca-kondisi:**
-    Menampilkan statistik
-    & grafik
+    **Postcondition:**
+    Display statistics
+    & charts
 end note
 
 @enduml
@@ -533,5 +533,4 @@ def main():
     print("="*60)
 
 if __name__ == "__main__":
-    main()</content>
-<parameter name="filePath">c:\xampp\htdocs\python\Job-Requirement-System\diagram_generator.py
+    main()

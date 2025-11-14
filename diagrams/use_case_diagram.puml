@@ -1,56 +1,56 @@
 
-@startuml Diagram Use Case - Sistem Rekomendasi Pekerjaan
+@startuml Use Case Diagram - Job Recommendation System
 
 left to right direction
 
-actor "Alumni SMK" as Alumni
+actor "SMK Alumni" as Alumni
 actor "Administrator" as Admin
 
-rectangle "Sistem Rekomendasi Pekerjaan" {
-    usecase "UC-001: Mengisi Survey Pekerjaan" as UC1
-    usecase "UC-002: Melihat Hasil Rekomendasi" as UC2
-    usecase "UC-003: Login ke Dashboard" as UC3
-    usecase "UC-004: Melihat Analitik Dashboard" as UC4
-    usecase "UC-005: Filter Data Survey" as UC5
+rectangle "Job Recommendation System" {
+    usecase "UC-001: Fill Job Survey" as UC1
+    usecase "UC-002: View Recommendations" as UC2
+    usecase "UC-003: Login to Dashboard" as UC3
+    usecase "UC-004: View Dashboard Analytics" as UC4
+    usecase "UC-005: Filter Survey Data" as UC5
     usecase "UC-006: Export Data" as UC6
 }
 
-' Use case Alumni
+' Alumni use cases
 Alumni --> UC1
 Alumni --> UC2
 
-' Use case Admin
+' Admin use cases
 Admin --> UC3
 Admin --> UC4
 Admin --> UC5
 Admin --> UC6
 
-' Relasi Include
+' Include relationships
 UC1 ..> UC2 : <<include>>
 
-' Relasi Extend
+' Extend relationships
 UC4 ..> UC5 : <<extend>>
 UC4 ..> UC6 : <<extend>>
 
-' Generalisasi
-Admin --|> Alumni : mewarisi
+' Generalization
+Admin --|> Alumni : inherits
 
 note right of UC1
-    **Prasyarat:**
-    Pengguna belum login
+    **Precondition:**
+    User not logged in
 
-    **Pasca-kondisi:**
-    Mendapat rekomendasi
-    pekerjaan
+    **Postcondition:**
+    Receives job
+    recommendations
 end note
 
 note right of UC4
-    **Prasyarat:**
-    Admin sudah login
+    **Precondition:**
+    Admin logged in
 
-    **Pasca-kondisi:**
-    Menampilkan statistik
-    & grafik
+    **Postcondition:**
+    Display statistics
+    & charts
 end note
 
 @enduml
