@@ -29,6 +29,7 @@ body {
     margin-bottom: 40px;
     border-bottom: 2px solid #e2e8f0;
     padding-bottom: 20px;
+    position: relative;
 }
 
 .header h1 {
@@ -49,6 +50,46 @@ body {
     color: #666;
     font-size: 13px;
     line-height: 1.6;
+}
+
+.header-actions {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    gap: 10px;
+}
+
+.header-actions a {
+    padding: 8px 16px;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.btn-dashboard {
+    background: #3b82f6;
+    color: white;
+}
+
+.btn-dashboard:hover {
+    background: #2563eb;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.btn-login {
+    background: #f1f5f9;
+    color: #475569;
+    border: 1px solid #e2e8f0;
+}
+
+.btn-login:hover {
+    background: #e2e8f0;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .section {

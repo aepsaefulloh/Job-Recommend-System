@@ -130,15 +130,17 @@ def calculate_dynamic_metrics():
                 predicted = actual
                 cm_perusahaan[actual][predicted] += 1
         
-        # Count total records
-        total_records = len(df_employed)
+        # Count total records (all alumni)
+        total_records = len(df)
+        employed_records = len(df_employed)
         
         return {
             'jurusan_accuracy': jurusan_accuracy,
             'perusahaan_accuracy': perusahaan_accuracy,
             'jurusan_confusion_matrix': [[0, 0], [0, 0]],  # Not calculated from CSV
             'perusahaan_confusion_matrix': cm_perusahaan,
-            'total_records': total_records
+            'total_records': total_records,
+            'employed_records': employed_records
         }
     except Exception as e:
         print(f"Error calculating metrics: {e}")
@@ -510,6 +512,11 @@ def result():
         # Update dashboard statistics
         update_dashboard_stats()
 
+        # Get metrics data for display
+        metrics_data = calculate_dynamic_metrics()
+        if metrics_data is None and models.get('metrics_data'):
+            metrics_data = models.get('metrics_data')
+
         # Render results
         return render_template('result.html',
                              email=processed_data['email'],
@@ -519,7 +526,8 @@ def result():
                              jurusan_cocok=predictions['jurusan_cocok'],
                              perusahaan_tepat=predictions['perusahaan_tepat'],
                              recommended_jobs=predictions['recommended_jobs'],
-                             validation=predictions.get('validation'))
+                             validation=predictions.get('validation'),
+                             metrics_data=metrics_data)
 
     except Exception as e:
         import traceback
