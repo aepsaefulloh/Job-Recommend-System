@@ -32,13 +32,13 @@ Contents
 
 Variables (edit as needed):
 APP_DIR=/home/ubuntu/job-recommend-system
-GIT_REPO=https://github.com/aepsaefulloh/Job-Requirement-System.git
+GIT_REPO=https://github.com/aepsaefulloh/Job-Recommend-System.git
 VENV_DIR=$APP_DIR/venv
 SERVICE_NAME=job-recommend-system
 GUNICORN_WORKERS=1        # use 1 on t3.micro
 GUNICORN_BIND=127.0.0.1:8000
 DB_HOST=localhost
-DB_NAME=job_recommend_db
+DB_NAME=job_recommended_db
 DB_USER=job_user
 DB_PASSWORD=change_this_secure_password
 
@@ -53,7 +53,9 @@ sudo apt install -y mysql-client
 # install nginx
 sudo apt install -y nginx
 # install pip packages if needed
-sudo pip3 install --upgrade pip
+# Setelah aktivasi venv, upgrade pip di virtual environment (jika perlu)
+# source venv/bin/activate
+# pip install --upgrade pip
 
 
 3) Create project user, clone repo, create venv, install deps
@@ -61,7 +63,7 @@ sudo pip3 install --upgrade pip
 # use ubuntu user or create a dedicated user
 # clone repository
 cd /home/ubuntu
-git clone https://github.com/aepsaefulloh/Job-Requirement-System.git job-recommend-system
+git clone https://github.com/aepsaefulloh/Job-Recommend-System.git job-recommend-system
 cd job-recommend-system
 
 # create and activate virtualenv
@@ -91,14 +93,14 @@ sudo mysql_secure_installation
 
 # Login to mysql and create user + database (example):
 mysql -u root -p
-CREATE DATABASE job_recommend_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-CREATE USER 'job_user'@'localhost' IDENTIFIED BY 'REPLACE_WITH_STRONG_PASSWORD';
-GRANT ALL PRIVILEGES ON job_recommend_db.* TO 'job_user'@'localhost';
+CREATE DATABASE job_recommended_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE USER 'job_user'@'localhost' IDENTIFIED BY 'Stillfree1@';
+GRANT ALL PRIVILEGES ON job_recommended_db.* TO 'job_user'@'localhost';
 FLUSH PRIVILEGES;
 EXIT;
 
 # If you have an SQL dump, import it:
-# mysql -u job_user -p job_recommend_db < path/to/dump.sql
+# mysql -u job_user -p job_recommended_db < path/to/dump.sql
 
 # Note: update .env to match DB_USER/DB_PASSWORD/DB_HOST/DB_NAME
 
@@ -109,8 +111,8 @@ Create or edit `.env` in the project root (or export env vars systemd will use).
 Example `.env`:
 DB_HOST=localhost
 DB_USER=job_user
-DB_PASSWORD=REPLACE_WITH_STRONG_PASSWORD
-DB_NAME=job_recommend_db
+DB_PASSWORD=Stillfree1@
+DB_NAME=job_recommended_db
 SECRET_KEY=change_this_secret
 
 # Ensure the app loads .env (python-dotenv). Our code uses dotenv in app.py.
