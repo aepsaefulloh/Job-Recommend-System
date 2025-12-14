@@ -28,6 +28,11 @@
                 }
             }
         }
+
+        // Clear localStorage after successful form submission
+        window.addEventListener('load', () => {
+            localStorage.removeItem('jrs_survey_autosave_v1');
+        });
     </script>
     <style>
       @media print {

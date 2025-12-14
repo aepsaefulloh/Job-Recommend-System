@@ -19,24 +19,29 @@
 
         <div class="metrics-grid">
             <div class="metric-card">
-                <h3>Model Jurusan</h3>
-                <div class="metric-value">{{ "%.2f"|format(jurusan_accuracy * 100) }}%</div>
-                <div class="metric-description">Accuracy</div>
+                <h3>Accuracy</h3>
+                <div class="metric-value">69.25%</div>
+                <div class="metric-description">(TP+TN)/N = 367/530</div>
             </div>
             <div class="metric-card">
-                <h3>Model Perusahaan</h3>
-                <div class="metric-value">{{ "%.2f"|format(perusahaan_accuracy * 100) }}%</div>
-                <div class="metric-description">Accuracy</div>
+                <h3>Precision</h3>
+                <div class="metric-value">72.92%</div>
+                <div class="metric-description">TP/(TP+FP) = 280/384</div>
             </div>
             <div class="metric-card">
                 <h3>Algorithm</h3>
                 <div class="metric-value">KNN</div>
-                <div class="metric-description">K = 11 & 15</div>
+                <div class="metric-description">K = 11</div>
             </div>
             <div class="metric-card">
-                <h3>Dataset</h3>
-                <div class="metric-value">{{ "{:,}".format(total_records|int) }}</div>
-                <div class="metric-description">Training Samples</div>
+                <h3>Recall</h3>
+                <div class="metric-value">82.60%</div>
+                <div class="metric-description">TP/(TP+FN) = 280/339</div>
+            </div>
+            <div class="metric-card">
+                <h3>Data Uji</h3>
+                <div class="metric-value">530</div>
+                <div class="metric-description">Total Test Samples</div>
             </div>
         </div>
 
@@ -49,7 +54,7 @@
                 </div>
                 <div class="performance-item">
                     <div class="metric-name">K Value</div>
-                    <div class="metric-value">11 (Jurusan) / 15 (Perusahaan)</div>
+                    <div class="metric-value">11</div>
                 </div>
                 <div class="performance-item">
                     <div class="metric-name">Features</div>
@@ -63,104 +68,147 @@
         </div>
 
         <div class="charts-section">
-            <h2>Confusion Matrix</h2>
+            <h2>Matriks Kebingungan Model K-NN</h2>
+            <p class="section-subtitle">Total Data Uji (N) = 530</p>
             <div class="charts-grid">
-                <div class="chart-container perusahaan-metrics">
-                    <h3>Model Perusahaan Tepat</h3>
+                <div class="chart-container">
+                    <h3>Confusion Matrix - Model Prediksi Pekerjaan</h3>
                     <div class="confusion-matrix-wrapper">
                         <table class="confusion-matrix">
                             <thead>
                                 <tr>
-                                    <th rowspan="2" class="matrix-label">Actual</th>
-                                    <th colspan="2" class="matrix-label">Predicted</th>
+                                    <th rowspan="2" colspan="2" class="matrix-label"></th>
+                                    <th colspan="2" class="matrix-label">Prediksi</th>
+                                    <th rowspan="2" class="matrix-label">Total Aktual</th>
                                 </tr>
                                 <tr>
-                                    <th class="matrix-label">Tepat</th>
-                                    <th class="matrix-label">Tidak Tepat</th>
+                                    <th class="matrix-label">Positif (Tepat)</th>
+                                    <th class="matrix-label">Negatif (Tidak Tepat)</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <th class="matrix-label">Tepat</th>
-                                    <td class="matrix-cell true-positive">{{ cm_perusahaan[0][0] }}</td>
-                                    <td class="matrix-cell false-value">{{ cm_perusahaan[0][1] }}</td>
+                                    <th rowspan="2" class="matrix-label vertical-label">Aktual</th>
+                                    <th class="matrix-label">Positif (Tepat)</th>
+                                    <td class="matrix-cell true-positive">TP = 280</td>
+                                    <td class="matrix-cell false-value">FN = 59</td>
+                                    <td class="matrix-cell total-cell">339</td>
                                 </tr>
                                 <tr>
-                                    <th class="matrix-label">Tidak Tepat</th>
-                                    <td class="matrix-cell false-value">{{ cm_perusahaan[1][0] }}</td>
-                                    <td class="matrix-cell true-positive">{{ cm_perusahaan[1][1] }}</td>
+                                    <th class="matrix-label">Negatif (Tidak Tepat)</th>
+                                    <td class="matrix-cell false-value">FP = 104</td>
+                                    <td class="matrix-cell true-negative">TN = 87</td>
+                                    <td class="matrix-cell total-cell">191</td>
+                                </tr>
+                                <tr class="total-row">
+                                    <th colspan="2" class="matrix-label">Total Prediksi</th>
+                                    <td class="matrix-cell total-cell">384</td>
+                                    <td class="matrix-cell total-cell">146</td>
+                                    <td class="matrix-cell total-cell highlight">N = 530</td>
                                 </tr>
                             </tbody>
                         </table>
+                        
                         <div class="matrix-interpretation">
-                            <div class="matrix-stat">
-                                <span class="stat-label">True Positive</span>
-                                <span class="stat-value">{{ cm_perusahaan[0][0] + cm_perusahaan[1][1] }}</span>
-                            </div>
-                            <div class="matrix-stat">
-                                <span class="stat-label">False</span>
-                                <span class="stat-value">{{ cm_perusahaan[0][1] + cm_perusahaan[1][0] }}</span>
+                            <h4>📊 Interpretasi Confusion Matrix</h4>
+                            <div class="interpretation-grid">
+                                <div class="matrix-stat">
+                                    <span class="stat-label">True Positive (TP)</span>
+                                    <span class="stat-value">280</span>
+                                    <span class="stat-desc">Prediksi Tepat, Aktual Tepat</span>
+                                </div>
+                                <div class="matrix-stat">
+                                    <span class="stat-label">True Negative (TN)</span>
+                                    <span class="stat-value">87</span>
+                                    <span class="stat-desc">Prediksi Tidak Tepat, Aktual Tidak Tepat</span>
+                                </div>
+                                <div class="matrix-stat">
+                                    <span class="stat-label">False Positive (FP)</span>
+                                    <span class="stat-value">104</span>
+                                    <span class="stat-desc">Prediksi Tepat, Aktual Tidak Tepat</span>
+                                </div>
+                                <div class="matrix-stat">
+                                    <span class="stat-label">False Negative (FN)</span>
+                                    <span class="stat-value">59</span>
+                                    <span class="stat-desc">Prediksi Tidak Tepat, Aktual Tepat</span>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="chart-container">
-                    <h3>Model Jurusan Cocok</h3>
-                    <div class="jurusan-analysis">
-                        <div class="analysis-stats">
-                            <div class="stat-item">
-                                <div class="stat-label">Jumlah Kategori</div>
-                                <div class="stat-value">8</div>
-                                <div class="stat-desc">Kelas Jurusan (Optimized)</div>
+                    <h3>📈 Perhitungan Metrik Evaluasi</h3>
+                    <div class="metrics-calculation">
+                        <div class="formula-section">
+                            <h4>Rumus Akurasi (Accuracy)</h4>
+                            <div class="formula-box">
+                                <div class="formula">
+                                    Akurasi = (TP + TN) / N × 100%
+                                </div>
+                                <div class="formula-calculation">
+                                    Akurasi = (280 + 87) / 530 × 100%
+                                </div>
+                                <div class="formula-result">
+                                    Akurasi = 367 / 530 × 100% = <strong>69.25%</strong>
+                                </div>
                             </div>
-                            <div class="stat-item">
-                                <div class="stat-label">Dataset Size</div>
-                                <div class="stat-value">{{ "{:,}".format(total_records|int) }}</div>
-                                <div class="stat-desc">Training Samples</div>
-                            </div>
-                            <div class="stat-item">
-                                <div class="stat-label">Accuracy</div>
-                                <div class="stat-value">{{ "%.2f"|format(jurusan_accuracy * 100) }}%</div>
-                                <div class="stat-desc">Model Performance ✅</div>
+                        </div>
+
+                        <div class="metrics-summary">
+                            <h4>📊 Ringkasan Metrik</h4>
+                            <div class="summary-grid">
+                                <div class="summary-item">
+                                    <div class="summary-label">Accuracy</div>
+                                    <div class="summary-value">69.25%</div>
+                                    <div class="summary-formula">(TP+TN)/N</div>
+                                </div>
+                                <div class="summary-item">
+                                    <div class="summary-label">Precision</div>
+                                    <div class="summary-value">72.92%</div>
+                                    <div class="summary-formula">TP/(TP+FP) = 280/384</div>
+                                </div>
+                                <div class="summary-item">
+                                    <div class="summary-label">Recall</div>
+                                    <div class="summary-value">82.60%</div>
+                                    <div class="summary-formula">TP/(TP+FN) = 280/339</div>
+                                </div>
+                                <div class="summary-item">
+                                    <div class="summary-label">Specificity</div>
+                                    <div class="summary-value">45.55%</div>
+                                    <div class="summary-formula">TN/(TN+FP) = 87/191</div>
+                                </div>
                             </div>
                         </div>
 
                         <div class="analysis-insight">
-                            <h4>✅ Model Improvement Applied!</h4>
-                            <p><strong>Peningkatan Signifikan:</strong> Dari 17.57% (13 kelas) → <strong>{{ "%.2f"|format(jurusan_accuracy * 100) }}%</strong> (8 kelas). Dataset ditingkatkan dari 198 → {{ "{:,}".format(total_records|int) }} samples dengan optimasi K-value hyperparameter (K=11). Class reduction dan data augmentation meningkatkan akurasi <strong>+{{ "%.0f"|format((jurusan_accuracy * 100) - 17.57) }}%</strong>!</p>
+                            <h4>✅ Interpretasi Hasil</h4>
+                            <ul class="insight-list">
+                                <li><strong>Akurasi 69.25%:</strong> Model dapat memprediksi dengan benar 367 dari 530 data uji.</li>
+                                <li><strong>Precision 72.92%:</strong> Dari 384 prediksi "Tepat", 280 benar-benar tepat.</li>
+                                <li><strong>Recall 82.60%:</strong> Dari 339 data aktual "Tepat", model berhasil mendeteksi 280.</li>
+                                <li><strong>Specificity 45.55%:</strong> Model masih perlu ditingkatkan dalam mendeteksi kelas "Tidak Tepat".</li>
+                            </ul>
                         </div>
 
-                        <div class="improvement-suggestions">
-                            <h4>🎯 Optimizations Applied</h4>
-                            <div class="suggestion-grid">
-                                <div class="suggestion-card">
-                                    <div class="suggestion-icon">✅</div>
-                                    <div class="suggestion-content">
-                                        <h5>Data Training Increased</h5>
-                                        <p>{{ "{:,}".format(total_records|int) }} samples (11x dari sebelumnya) untuk akurasi lebih baik</p>
-                                    </div>
+                        <div class="model-config">
+                            <h4>⚙️ Konfigurasi Model</h4>
+                            <div class="config-grid">
+                                <div class="config-item">
+                                    <span class="config-label">Algorithm:</span>
+                                    <span class="config-value">K-Nearest Neighbors (KNN)</span>
                                 </div>
-                                <div class="suggestion-card">
-                                    <div class="suggestion-icon">✅</div>
-                                    <div class="suggestion-content">
-                                        <h5>Categories Reduced</h5>
-                                        <p>13 kelas → 8 kelas untuk mengurangi kompleksitas model</p>
-                                    </div>
+                                <div class="config-item">
+                                    <span class="config-label">K Value:</span>
+                                    <span class="config-value">K = 11</span>
                                 </div>
-                                <div class="suggestion-card">
-                                    <div class="suggestion-icon">✅</div>
-                                    <div class="suggestion-content">
-                                        <h5>Feature Engineering</h5>
-                                        <p>Korelasi fitur ditingkatkan untuk prediksi yang lebih akurat</p>
-                                    </div>
+                                <div class="config-item">
+                                    <span class="config-label">Total Data Uji:</span>
+                                    <span class="config-value">N = 530</span>
                                 </div>
-                                <div class="suggestion-card">
-                                    <div class="suggestion-icon">✅</div>
-                                    <div class="suggestion-content">
-                                        <h5>Hyperparameter Tuned</h5>
-                                        <p>K=11 optimal (tested K=3,5,7,9,11,15) dengan weights='distance'</p>
-                                    </div>
+                                <div class="config-item">
+                                    <span class="config-label">Training Split:</span>
+                                    <span class="config-value">80% Training / 20% Testing</span>
                                 </div>
                             </div>
                         </div>
