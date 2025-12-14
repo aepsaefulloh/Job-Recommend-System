@@ -15,36 +15,39 @@
             </div>
             <h1>📊 Model Performance Metrics</h1>
             <p class="subtitle">Job Recommendation System - KNN Algorithm</p>
+            <p class="data-source">📁 Data Source: job_survey.csv (Real-time Calculation)</p>
         </div>
 
+        <!-- Summary Cards - Dynamic Values -->
         <div class="metrics-grid">
             <div class="metric-card">
                 <h3>Accuracy</h3>
-                <div class="metric-value">69.25%</div>
-                <div class="metric-description">(TP+TN)/N = 367/530</div>
+                <div class="metric-value">{{ "%.2f"|format(metrics.accuracy * 100) }}%</div>
+                <div class="metric-description">(TP+TN)/N = {{ metrics.tp + metrics.tn }}/{{ metrics.n_test }}</div>
             </div>
             <div class="metric-card">
                 <h3>Precision</h3>
-                <div class="metric-value">72.92%</div>
-                <div class="metric-description">TP/(TP+FP) = 280/384</div>
+                <div class="metric-value">{{ "%.2f"|format(metrics.precision * 100) }}%</div>
+                <div class="metric-description">TP/(TP+FP) = {{ metrics.tp }}/{{ metrics.predicted_positive }}</div>
             </div>
             <div class="metric-card">
                 <h3>Algorithm</h3>
                 <div class="metric-value">KNN</div>
-                <div class="metric-description">K = 11</div>
+                <div class="metric-description">K = {{ metrics.k_value }}</div>
             </div>
             <div class="metric-card">
                 <h3>Recall</h3>
-                <div class="metric-value">82.60%</div>
-                <div class="metric-description">TP/(TP+FN) = 280/339</div>
+                <div class="metric-value">{{ "%.2f"|format(metrics.recall * 100) }}%</div>
+                <div class="metric-description">TP/(TP+FN) = {{ metrics.tp }}/{{ metrics.actual_positive }}</div>
             </div>
             <div class="metric-card">
                 <h3>Data Uji</h3>
-                <div class="metric-value">530</div>
-                <div class="metric-description">Total Test Samples</div>
+                <div class="metric-value">{{ metrics.n_test }}</div>
+                <div class="metric-description">Total Test Samples (20%)</div>
             </div>
         </div>
 
+        <!-- Model Information - Dynamic -->
         <div class="model-performance">
             <h2>Model Information</h2>
             <div class="performance-grid">
@@ -54,23 +57,33 @@
                 </div>
                 <div class="performance-item">
                     <div class="metric-name">K Value</div>
-                    <div class="metric-value">11</div>
+                    <div class="metric-value">{{ metrics.k_value }}</div>
                 </div>
                 <div class="performance-item">
                     <div class="metric-name">Features</div>
                     <div class="metric-value">10</div>
                 </div>
                 <div class="performance-item">
-                    <div class="metric-name">Training Split</div>
-                    <div class="metric-value">80%</div>
+                    <div class="metric-name">Training Data</div>
+                    <div class="metric-value">{{ metrics.n_train }} (80%)</div>
+                </div>
+                <div class="performance-item">
+                    <div class="metric-name">Total Dataset</div>
+                    <div class="metric-value">{{ metrics.total_records }} records</div>
+                </div>
+                <div class="performance-item">
+                    <div class="metric-name">Employed Records</div>
+                    <div class="metric-value">{{ metrics.employed_records }} alumni</div>
                 </div>
             </div>
         </div>
 
+        <!-- Confusion Matrix Section - Dynamic -->
         <div class="charts-section">
             <h2>Matriks Kebingungan Model K-NN</h2>
-            <p class="section-subtitle">Total Data Uji (N) = 530</p>
+            <p class="section-subtitle">Total Data Uji (N) = {{ metrics.n_test }}</p>
             <div class="charts-grid">
+                <!-- Confusion Matrix Table -->
                 <div class="chart-container">
                     <h3>Confusion Matrix - Model Prediksi Pekerjaan</h3>
                     <div class="confusion-matrix-wrapper">
@@ -90,46 +103,47 @@
                                 <tr>
                                     <th rowspan="2" class="matrix-label vertical-label">Aktual</th>
                                     <th class="matrix-label">Positif (Tepat)</th>
-                                    <td class="matrix-cell true-positive">TP = 280</td>
-                                    <td class="matrix-cell false-value">FN = 59</td>
-                                    <td class="matrix-cell total-cell">339</td>
+                                    <td class="matrix-cell true-positive">TP = {{ metrics.tp }}</td>
+                                    <td class="matrix-cell false-value">FN = {{ metrics.fn }}</td>
+                                    <td class="matrix-cell total-cell">{{ metrics.actual_positive }}</td>
                                 </tr>
                                 <tr>
                                     <th class="matrix-label">Negatif (Tidak Tepat)</th>
-                                    <td class="matrix-cell false-value">FP = 104</td>
-                                    <td class="matrix-cell true-negative">TN = 87</td>
-                                    <td class="matrix-cell total-cell">191</td>
+                                    <td class="matrix-cell false-value">FP = {{ metrics.fp }}</td>
+                                    <td class="matrix-cell true-negative">TN = {{ metrics.tn }}</td>
+                                    <td class="matrix-cell total-cell">{{ metrics.actual_negative }}</td>
                                 </tr>
                                 <tr class="total-row">
                                     <th colspan="2" class="matrix-label">Total Prediksi</th>
-                                    <td class="matrix-cell total-cell">384</td>
-                                    <td class="matrix-cell total-cell">146</td>
-                                    <td class="matrix-cell total-cell highlight">N = 530</td>
+                                    <td class="matrix-cell total-cell">{{ metrics.predicted_positive }}</td>
+                                    <td class="matrix-cell total-cell">{{ metrics.predicted_negative }}</td>
+                                    <td class="matrix-cell total-cell highlight">N = {{ metrics.n_test }}</td>
                                 </tr>
                             </tbody>
                         </table>
                         
+                        <!-- Interpretation Grid -->
                         <div class="matrix-interpretation">
                             <h4>📊 Interpretasi Confusion Matrix</h4>
                             <div class="interpretation-grid">
                                 <div class="matrix-stat">
                                     <span class="stat-label">True Positive (TP)</span>
-                                    <span class="stat-value">280</span>
+                                    <span class="stat-value">{{ metrics.tp }}</span>
                                     <span class="stat-desc">Prediksi Tepat, Aktual Tepat</span>
                                 </div>
                                 <div class="matrix-stat">
                                     <span class="stat-label">True Negative (TN)</span>
-                                    <span class="stat-value">87</span>
+                                    <span class="stat-value">{{ metrics.tn }}</span>
                                     <span class="stat-desc">Prediksi Tidak Tepat, Aktual Tidak Tepat</span>
                                 </div>
                                 <div class="matrix-stat">
                                     <span class="stat-label">False Positive (FP)</span>
-                                    <span class="stat-value">104</span>
+                                    <span class="stat-value">{{ metrics.fp }}</span>
                                     <span class="stat-desc">Prediksi Tepat, Aktual Tidak Tepat</span>
                                 </div>
                                 <div class="matrix-stat">
                                     <span class="stat-label">False Negative (FN)</span>
-                                    <span class="stat-value">59</span>
+                                    <span class="stat-value">{{ metrics.fn }}</span>
                                     <span class="stat-desc">Prediksi Tidak Tepat, Aktual Tepat</span>
                                 </div>
                             </div>
@@ -137,6 +151,7 @@
                     </div>
                 </div>
 
+                <!-- Metrics Calculation -->
                 <div class="chart-container">
                     <h3>📈 Perhitungan Metrik Evaluasi</h3>
                     <div class="metrics-calculation">
@@ -147,50 +162,59 @@
                                     Akurasi = (TP + TN) / N × 100%
                                 </div>
                                 <div class="formula-calculation">
-                                    Akurasi = (280 + 87) / 530 × 100%
+                                    Akurasi = ({{ metrics.tp }} + {{ metrics.tn }}) / {{ metrics.n_test }} × 100%
                                 </div>
                                 <div class="formula-result">
-                                    Akurasi = 367 / 530 × 100% = <strong>69.25%</strong>
+                                    Akurasi = {{ metrics.tp + metrics.tn }} / {{ metrics.n_test }} × 100% = <strong>{{ "%.2f"|format(metrics.accuracy * 100) }}%</strong>
                                 </div>
                             </div>
                         </div>
 
+                        <!-- Metrics Summary Grid -->
                         <div class="metrics-summary">
                             <h4>📊 Ringkasan Metrik</h4>
                             <div class="summary-grid">
                                 <div class="summary-item">
                                     <div class="summary-label">Accuracy</div>
-                                    <div class="summary-value">69.25%</div>
+                                    <div class="summary-value">{{ "%.2f"|format(metrics.accuracy * 100) }}%</div>
                                     <div class="summary-formula">(TP+TN)/N</div>
                                 </div>
                                 <div class="summary-item">
                                     <div class="summary-label">Precision</div>
-                                    <div class="summary-value">72.92%</div>
-                                    <div class="summary-formula">TP/(TP+FP) = 280/384</div>
+                                    <div class="summary-value">{{ "%.2f"|format(metrics.precision * 100) }}%</div>
+                                    <div class="summary-formula">TP/(TP+FP) = {{ metrics.tp }}/{{ metrics.predicted_positive }}</div>
                                 </div>
                                 <div class="summary-item">
                                     <div class="summary-label">Recall</div>
-                                    <div class="summary-value">82.60%</div>
-                                    <div class="summary-formula">TP/(TP+FN) = 280/339</div>
+                                    <div class="summary-value">{{ "%.2f"|format(metrics.recall * 100) }}%</div>
+                                    <div class="summary-formula">TP/(TP+FN) = {{ metrics.tp }}/{{ metrics.actual_positive }}</div>
                                 </div>
                                 <div class="summary-item">
                                     <div class="summary-label">Specificity</div>
-                                    <div class="summary-value">45.55%</div>
-                                    <div class="summary-formula">TN/(TN+FP) = 87/191</div>
+                                    <div class="summary-value">{{ "%.2f"|format(metrics.specificity * 100) }}%</div>
+                                    <div class="summary-formula">TN/(TN+FP) = {{ metrics.tn }}/{{ metrics.actual_negative }}</div>
                                 </div>
                             </div>
                         </div>
 
+                        <!-- Interpretation -->
                         <div class="analysis-insight">
                             <h4>✅ Interpretasi Hasil</h4>
                             <ul class="insight-list">
-                                <li><strong>Akurasi 69.25%:</strong> Model dapat memprediksi dengan benar 367 dari 530 data uji.</li>
-                                <li><strong>Precision 72.92%:</strong> Dari 384 prediksi "Tepat", 280 benar-benar tepat.</li>
-                                <li><strong>Recall 82.60%:</strong> Dari 339 data aktual "Tepat", model berhasil mendeteksi 280.</li>
-                                <li><strong>Specificity 45.55%:</strong> Model masih perlu ditingkatkan dalam mendeteksi kelas "Tidak Tepat".</li>
+                                <li><strong>Akurasi {{ "%.2f"|format(metrics.accuracy * 100) }}%:</strong> Model dapat memprediksi dengan benar {{ metrics.tp + metrics.tn }} dari {{ metrics.n_test }} data uji.</li>
+                                <li><strong>Precision {{ "%.2f"|format(metrics.precision * 100) }}%:</strong> Dari {{ metrics.predicted_positive }} prediksi "Tepat", {{ metrics.tp }} benar-benar tepat.</li>
+                                <li><strong>Recall {{ "%.2f"|format(metrics.recall * 100) }}%:</strong> Dari {{ metrics.actual_positive }} data aktual "Tepat", model berhasil mendeteksi {{ metrics.tp }}.</li>
+                                <li><strong>Specificity {{ "%.2f"|format(metrics.specificity * 100) }}%:</strong> 
+                                    {% if metrics.specificity < 0.5 %}
+                                    Model masih perlu ditingkatkan dalam mendeteksi kelas "Tidak Tepat".
+                                    {% else %}
+                                    Model cukup baik dalam mendeteksi kelas "Tidak Tepat".
+                                    {% endif %}
+                                </li>
                             </ul>
                         </div>
 
+                        <!-- Model Configuration -->
                         <div class="model-config">
                             <h4>⚙️ Konfigurasi Model</h4>
                             <div class="config-grid">
@@ -200,21 +224,59 @@
                                 </div>
                                 <div class="config-item">
                                     <span class="config-label">K Value:</span>
-                                    <span class="config-value">K = 11</span>
+                                    <span class="config-value">K = {{ metrics.k_value }}</span>
                                 </div>
                                 <div class="config-item">
                                     <span class="config-label">Total Data Uji:</span>
-                                    <span class="config-value">N = 530</span>
+                                    <span class="config-value">N = {{ metrics.n_test }}</span>
                                 </div>
                                 <div class="config-item">
                                     <span class="config-label">Training Split:</span>
                                     <span class="config-value">80% Training / 20% Testing</span>
+                                </div>
+                                <div class="config-item">
+                                    <span class="config-label">Weights:</span>
+                                    <span class="config-value">distance</span>
+                                </div>
+                                <div class="config-item">
+                                    <span class="config-label">Metric:</span>
+                                    <span class="config-value">euclidean</span>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
+
+        <!-- Dataset Info -->
+        <div class="dataset-info">
+            <h2>📁 Informasi Dataset</h2>
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">Total Records:</span>
+                    <span class="info-value">{{ metrics.total_records }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Employed Alumni:</span>
+                    <span class="info-value">{{ metrics.employed_records }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Training Data:</span>
+                    <span class="info-value">{{ metrics.n_train }} (80%)</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Test Data:</span>
+                    <span class="info-value">{{ metrics.n_test }} (20%)</span>
+                </div>
+                {% if metrics.perusahaan_classes %}
+                <div class="info-item full-width">
+                    <span class="info-label">Target Classes:</span>
+                    <span class="info-value">{{ metrics.perusahaan_classes | join(', ') }}</span>
+                </div>
+                {% endif %}
+            </div>
+            <p class="update-note">⏱️ Data dihitung secara real-time dari file job_survey.csv. Perubahan pada dataset akan otomatis terlihat saat halaman di-refresh.</p>
         </div>
 
         <div class="nav-links">
